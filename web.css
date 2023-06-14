@@ -1,0 +1,155 @@
+body {
+  background-color: #000;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+#container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+}
+
+#searchContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+#searchInput {
+  padding: 10px;
+  border: none;
+  border-radius: 5px 0 0 5px;
+  background-color: #333;
+  color: #fff;
+}
+
+#searchButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 0 5px 5px 0;
+  background-color: #555;
+  color: #fff;
+  cursor: pointer;
+}
+
+#profileButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #555;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+#results {
+  max-height: 600px; /* Increase the max-height value */
+  overflow-y: scroll;
+  scrollbar-width: thin;
+}
+
+.repository {
+  margin-bottom: 30px; /* Increase the margin-bottom value */
+  padding: 10px;
+  border-radius: 5px;
+  background-color: #333;
+  cursor: pointer;
+}
+
+.repository-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px; /* Increase the margin-bottom value */
+}
+
+.repository a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.repository p {
+  color: #aaa;
+  margin-bottom: 10px; /* Increase the margin-bottom value */
+}
+
+.arrow-icon::after {
+  content: "\25B8";
+  font-size: 10px;
+  transform: rotate(90deg);
+  transition: transform 0.3s ease;
+}
+
+.repository.expanded .arrow-icon::after {
+  transform: rotate(0deg);
+}
+
+.readme-content {
+  display: none;
+  padding: 10px;
+  margin-top: 10px; /* Increase the margin-top value */
+  background-color: #222;
+  color: #fff;
+  font-size: 14px;
+  line-height: 1.5;
+  max-height: 400px; /* Increase the max-height value */
+  overflow-y: scroll;
+}
+
+.readme-content.expanded {
+  display: block;
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+  background-color: #111;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: #fff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#filterInput {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #555;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 10px;
+}
