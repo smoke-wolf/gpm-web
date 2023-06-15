@@ -1,0 +1,42 @@
+
+/* Admin Page Styles */
+#admin {
+  display: none;
+  margin-top: 20px;
+}
+
+#adminInput {
+  margin-bottom: 10px;
+}
+
+#adminSaveButton {
+  margin-bottom: 10px;
+}
+
+#dashboard {
+  display: none;
+  margin-top: 20px;
+}
+
+#siteVisitsLabel {
+  font-weight: bold;
+}
+
+#siteVisits {
+  color: #007bff;
+}
+
+#viewedReposLabel {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+#viewedReposList {
+  margin-top: 5px;
+  list-style-type: none;
+  padding-left: 0;
+}
+
+#viewedReposList li {
+  margin-bottom: 5px;
+}
