@@ -9,6 +9,9 @@
     <button id="profileButton">Profile</button>
     <h1>GitHub Repository Search</h1>
 
+    <!-- Admin Dashboard Button -->
+    <button id="adminButton" onclick="showAdminDashboard()">Admin Dashboard</button>
+
     <div id="searchContainer">
       <input type="text" id="searchInput" placeholder="Search repositories">
       <select id="filterInput">
@@ -31,6 +34,14 @@
         <div id="readmeContent"></div>
       </div>
     </div>
+
+    <!-- Admin Dashboard Section -->
+    <div id="adminDashboard">
+      <h2>Admin Dashboard</h2>
+      <p id="siteVisits">Site Visits: 0</p>
+      <p id="selectedRepositories">Selected Repositories: 0</p>
+      <p id="timeSpent">Time Spent on Site: 0 seconds</p>
+    </div>
   </div>
 
   <!-- Profile Page -->
@@ -45,5 +56,230 @@
   </div>
 
   <script src="web.js"></script>
+  <script>
+    var siteVisits = 0;
+    var selectedRepositories = 0;
+    var timeSpent = 0;
+    var startTime = new Date().getTime();
+    var adminDashboardVisible = false;
+    var adminPasswordHash = "eeba0fda1ce4f5d20678f2e9e2b1ce2305fba1e211da5e1be8c2434f6d780e3d"; // Hashed password for "Victoria2021!"
+
+    document.getElementById("searchButton").addEventListener("click", function() {
+      // Log selected repositories
+      selectedRepositories++;
+      updateAdminDashboard();
+
+      // Perform search and display results
+      var searchInput = document.getElementById("searchInput").value;
+      var xhr = new XMLHttpRequest();
+
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var response = JSON.parse(xhr.responseText);
+          var filteredRepositories = filterRepositories(response.items, searchInput);
+          displayResults(filteredRepositories);
+        }
+      };
+
+      xhr.open("GET", "https://api.github.com/search/repositories?q=" + searchInput, true);
+      xhr.send();
+    });
+
+    function filterRepositories(repositories, searchInput) {
+      var filteredRepositories = repositories.filter(function(repository) {
+        var fullName = repository.full_name.toLowerCase();
+        var owner = repository.owner.login.toLowerCase();
+        return fullName.includes(searchInput.toLowerCase()) || owner.includes(searchInput.toLowerCase());
+      });
+
+      filteredRepositories.sort(function(a, b) {
+        var filterValue = document.getElementById("filterInput").value;
+        if (filterValue === "user") {
+          // Sort by user
+          var ownerA = a.owner.login.toLowerCase();
+          var ownerB = b.owner.login.toLowerCase();
+          return ownerA.localeCompare(ownerB);
+        } else if (filterValue === "recent") {
+          // Sort by most recent update
+          var updatedAtA = new Date(a.updated_at).getTime();
+          var updatedAtB = new Date(b.updated_at).getTime();
+          return updatedAtB - updatedAtA;
+        } else if (filterValue === "stars") {
+          // Sort by most stars
+          var starsA = a.stargazers_count;
+          var starsB = b.stargazers_count;
+          return starsB - starsA;
+        } else if (filterValue === "downloads") {
+          // Sort by most downloads (assuming the download count is available)
+          var downloadsA = a.downloads_count || 0;
+          var downloadsB = b.downloads_count || 0;
+          return downloadsB - downloadsA;
+        } else {
+          // No filter selected, maintain the default order
+          return 0;
+        }
+      });
+
+      return filteredRepositories;
+    }
+
+    function displayResults(repositories) {
+      var repositoryList = document.getElementById("repositoryList");
+      repositoryList.innerHTML = "";
+
+      repositories.forEach(function(repository) {
+        var listItem = document.createElement("li");
+        listItem.className = "repository";
+
+        var header = document.createElement("div");
+        header.className = "repository-header";
+
+        var repoLink = document.createElement("a");
+        repoLink.href = repository.html_url;
+        repoLink.textContent = repository.full_name;
+
+        var description = document.createElement("p");
+        description.textContent = repository.description;
+        if (description.textContent.length > 150) {
+          description.textContent = description.textContent.substring(0, 150) + "...";
+        }
+
+        var arrowIcon = document.createElement("span");
+        arrowIcon.className = "arrow-icon";
+
+        var downloadButton = document.createElement("button");
+        downloadButton.textContent = "Download & Install";
+        downloadButton.classList.add("download-button");
+        downloadButton.addEventListener("click", function() {
+          runCommandLocally(repository.owner.login, repository.name);
+        });
+
+        header.appendChild(repoLink);
+        header.appendChild(description);
+        header.appendChild(arrowIcon);
+
+        listItem.appendChild(header);
+        listItem.appendChild(downloadButton);
+
+        var readmeContent = document.createElement("div");
+        readmeContent.className = "readme-content";
+        listItem.appendChild(readmeContent);
+
+        listItem.addEventListener("click", function() {
+          toggleReadmeContent(readmeContent, repository.owner.login, repository.name);
+        });
+
+        repositoryList.appendChild(listItem);
+      });
+    }
+
+    function updateAdminDashboard() {
+      var siteVisitsElement = document.getElementById("siteVisits");
+      siteVisitsElement.textContent = "Site Visits: " + siteVisits;
+
+      var selectedRepositoriesElement = document.getElementById("selectedRepositories");
+      selectedRepositoriesElement.textContent = "Selected Repositories: " + selectedRepositories;
+
+      var timeSpentElement = document.getElementById("timeSpent");
+      timeSpentElement.textContent = "Time Spent on Site: " + formatTime(timeSpent) + " seconds";
+    }
+
+    function formatTime(milliseconds) {
+      var seconds = Math.floor(milliseconds / 1000);
+      return seconds;
+    }
+
+    function showAdminDashboard() {
+      var password = prompt("Enter admin password:");
+      var hashedPassword = sha256(password);
+
+      if (hashedPassword === adminPasswordHash) {
+        adminDashboardVisible = true;
+        document.getElementById("adminDashboard").style.display = "block";
+        updateAdminDashboard();
+      } else {
+        alert("Incorrect password. Access denied.");
+      }
+    }
+
+    function hideAdminDashboard() {
+      adminDashboardVisible = false;
+      document.getElementById("adminDashboard").style.display = "none";
+    }
+
+    function toggleReadmeContent(readmeContent, owner, repo) {
+      if (readmeContent.style.display === "block") {
+        readmeContent.style.display = "none";
+      } else {
+        readmeContent.style.display = "block";
+        fetchReadmeContent(owner, repo, readmeContent);
+      }
+    }
+
+    function fetchReadmeContent(owner, repo, readmeContent) {
+      var xhr = new XMLHttpRequest();
+
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          var response = JSON.parse(xhr.responseText);
+          var content = atob(response.content);
+          readmeContent.textContent = content;
+        }
+      };
+
+      xhr.open("GET", "https://api.github.com/repos/" + owner + "/" + repo + "/readme", true);
+      xhr.setRequestHeader("Accept", "application/vnd.github.VERSION.raw");
+      xhr.send();
+    }
+
+    function runCommandLocally(owner, repo) {
+      alert("Running 'npm install " + owner + "/" + repo + "'");
+    }
+
+    function sha256(message) {
+      var sha256Hash = CryptoJS.SHA256(message);
+      return sha256Hash.toString(CryptoJS.enc.Hex);
+    }
+
+    // Profile Page
+    var profileButton = document.getElementById("profileButton");
+    var profilePage = document.getElementById("profilePage");
+    var userIP = document.getElementById("userIP");
+    var downloadCount = document.getElementById("downloadCount");
+    var serverStatus = document.getElementById("serverStatus");
+    var closeButtons = document.querySelectorAll(".close");
+
+    profileButton.addEventListener("click", function() {
+      profilePage.style.display = "block";
+      retrieveProfileData();
+    });
+
+    closeButtons.forEach(function(closeButton) {
+      closeButton.addEventListener("click", function() {
+        profilePage.style.display = "none";
+      });
+    });
+
+    function retrieveProfileData() {
+      // Simulating profile data retrieval
+      var userIPData = "User IP: 123.45.67.89";
+      var downloadCountData = "Download Count: 100";
+      var serverStatusData = "Server Status: Online";
+
+      userIP.textContent = userIPData;
+      downloadCount.textContent = downloadCountData;
+      serverStatus.textContent = serverStatusData;
+    }
+
+    // Admin Dashboard Timer
+    setInterval(function() {
+      if (adminDashboardVisible) {
+        var currentTime = new Date().getTime();
+        timeSpent += currentTime - startTime;
+        startTime = currentTime;
+        updateAdminDashboard();
+      }
+    }, 1000);
+  </script>
 </body>
 </html>
