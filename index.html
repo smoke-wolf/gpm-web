@@ -425,12 +425,22 @@ function updateViewedRepos(repository, readmeContent) {
   var viewedReposList = document.getElementById("viewedReposList");
   viewedReposList.innerHTML = ""; // Clear the list before populating
 
-  viewedRepos.forEach(function(repo) {
+  viewedRepos.forEach(function (repo) {
     var listItem = document.createElement("li");
     listItem.textContent = repo.repository + " (" + repo.visits + " visits)";
     viewedReposList.appendChild(listItem);
   });
+
+  var allSearchesList = document.getElementById("allSearchesList");
+  allSearchesList.innerHTML = ""; // Clear the list before populating
+
+  allSearches.forEach(function (search) {
+    var listItem = document.createElement("li");
+    listItem.textContent = search;
+    allSearchesList.appendChild(listItem);
+  });
 }
+
 
 
 
