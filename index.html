@@ -355,12 +355,30 @@ var connectedIPs = [];
     var siteVisitsCount = parseInt(localStorage.getItem("siteVisitsCount")) || 0;
 var viewedRepos = JSON.parse(localStorage.getItem("viewedRepos")) || [];
 var connectedIPs = [];
+document.getElementById("searchButton").addEventListener("click", function() {
+  var searchInput = document.getElementById("searchInput").value;
+  var filterInput = document.getElementById("filterInput").value;
+  var xhr = new XMLHttpRequest();
 
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      var response = JSON.parse(xhr.responseText);
+      var filteredResults = filterResults(response.items, filterInput);
+      displayResults(filteredResults);
+      updateSiteVisitsCount(); // Increment site visits count on search
+      updateSearches(searchInput); // Update searches list
+    }
+  };
+
+  xhr.open("GET", "https://api.github.com/search/repositories?q=" + searchInput, true);
+  xhr.send();
+});
 function updateSiteVisitsCount() {
   siteVisitsCount++;
   document.getElementById("siteVisits").textContent = siteVisitsCount;
   localStorage.setItem("siteVisitsCount", siteVisitsCount);
 }
+
 
 function updateViewedRepos(repository, readmeContent) {
   // Check if the repository already exists in the viewedRepos array
@@ -440,7 +458,8 @@ function updateViewedRepos(repository, readmeContent) {
 
   var allSearchesList = document.getElementById("allSearchesList");
   allSearchesList.innerHTML = ""; // Clear the list before populating
-
+  
+     
   allSearches.forEach(function (search) {
     var listItem = document.createElement("li");
     listItem.textContent = search;
@@ -448,7 +467,13 @@ function updateViewedRepos(repository, readmeContent) {
   });
 }
 
-
+function updateSearches(searchQuery) {
+  searches.push(searchQuery);
+  var searchesList = document.getElementById("searchesList");
+  var listItem = document.createElement("li");
+  listItem.textContent = searchQuery;
+  searchesList.appendChild(listItem);
+}
 
 
     function checkAdminPassword() {
@@ -464,9 +489,9 @@ function updateViewedRepos(repository, readmeContent) {
       document.getElementById("admin").style.display = "block";
     });
 
-    document.getElementById("adminSaveButton").addEventListener("click", function() {
-      checkAdminPassword();
-    });
+document.getElementById("adminSaveButton").addEventListener("click", function() {
+  checkAdminPassword();
+});
 
     document.getElementById("searchButton").addEventListener("click", function() {
       var searchInput = document.getElementById("searchInput").value;
