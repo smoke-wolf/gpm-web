@@ -266,6 +266,15 @@
     .error-message {
       color: red;
       margin-top: 5px;
+    /* Style for the connected IPs list */
+    #connectedIPs {
+      list-style: none;
+      padding: 0;
+    }
+
+    /* Style for each IP item */
+    .ip-item {
+      margin-bottom: 5px;
     }
   </style>
 </head>
@@ -378,12 +387,34 @@ function updateViewedRepos(repository, readmeContent) {
 // Rest of the code...
 
 
-    function updateConnectedIPs(ip) {
-      connectedIPs.push(ip);
+    function updateConnectedIPs(ip, deviceType) {
+      // Check if the IP already exists in the connectedIPs array
+      var existingIP = connectedIPs.find(function(item) {
+        return item.ip === ip;
+      });
+
+      if (existingIP) {
+        // If the IP exists, increment the visit count and update the device type
+        existingIP.visits += 1;
+        existingIP.deviceType = deviceType;
+      } else {
+        // Otherwise, add a new entry with visit count initialized to 1
+        connectedIPs.push({
+          ip: ip,
+          visits: 1,
+          deviceType: deviceType
+        });
+      }
+
       var connectedIPsList = document.getElementById("connectedIPs");
-      var listItem = document.createElement("li");
-      listItem.textContent = ip;
-      connectedIPsList.appendChild(listItem);
+      connectedIPsList.innerHTML = ""; // Clear the list before populating
+
+      connectedIPs.forEach(function(item) {
+        var listItem = document.createElement("li");
+        listItem.className = "ip-item";
+        listItem.textContent = item.ip + " (" + item.deviceType + ", " + item.visits + " visits)";
+        connectedIPsList.appendChild(listItem);
+      });
     }
 
     function displayAdminDashboard() {
@@ -501,7 +532,7 @@ function updateViewedRepos(repository, readmeContent) {
         repositoryList.appendChild(listItem);
       });
     }
-
+    
     function toggleReadmeContent(contentElement, owner, repo) {
   if (contentElement.classList.contains("expanded")) {
     contentElement.innerHTML = "";
