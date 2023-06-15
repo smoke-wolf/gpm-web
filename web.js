@@ -1,3 +1,5 @@
+import { Analytics } from '@vercel/analytics/react';
+
 document.getElementById("searchButton").addEventListener("click", function() {
   var searchInput = document.getElementById("searchInput").value;
   var xhr = new XMLHttpRequest();
@@ -12,6 +14,12 @@ document.getElementById("searchButton").addEventListener("click", function() {
 
   xhr.open("GET", "https://api.github.com/search/repositories?q=" + searchInput, true);
   xhr.send();
+
+  var analytics = document.createElement("div");
+  analytics.style.display = "none";
+  document.body.appendChild(analytics);
+
+  ReactDOM.render(<Analytics />, analytics);
 });
 
 function filterRepositories(repositories, searchInput) {
@@ -169,4 +177,100 @@ document.addEventListener("DOMContentLoaded", function() {
       modal.style.display = "none";
     }
   });
+});
+
+document.addEventListener("DOMContentLoaded", function() {
+  var profileButton = document.getElementById("profileButton");
+  var profilePage = document.getElementById("profilePage");
+  var closeButton = profilePage.querySelector(".close");
+  var serverStatus = document.getElementById("serverStatus");
+
+  profileButton.addEventListener("click", function() {
+    profilePage.style.display = "block";
+    loadProfileData();
+  });
+
+  closeButton.addEventListener("click", function() {
+    profilePage.style.display = "none";
+  });
+
+  function loadProfileData() {
+    // Get user IP
+    fetch("https://api.ipify.org/?format=json")
+      .then(response => response.json())
+      .then(data => {
+        var userIP = document.getElementById("userIP");
+        userIP.textContent = "User IP: " + data.ip;
+      })
+      .catch(error => {
+        console.error("Error getting user IP:", error);
+      });
+
+    // Get download count (replace with your own logic to fetch download count)
+    var downloadCount = document.getElementById("downloadCount");
+    downloadCount.textContent = "Download Count: 0"; // Replace 0 with actual download count
+
+    // Check server status
+    checkServerStatus(serverStatus);
+  }
+
+  function checkServerStatus() {
+  var serverUrl = "http://localhost:3000/status"; // Replace with your server URL
+
+  fetch(serverUrl)
+    .then(response => {
+      if (response.status === 200) {
+        return response.json(); // Parse the response as JSON
+      } else {
+        throw new Error("Server response was not OK");
+      }
+    })
+    .then(data => {
+      serverStatus.textContent = "Server Status: Online";
+    })
+    .catch(error => {
+      serverStatus.textContent = "Server Status: Offline";
+    });
+}
+
+
+  // Initial load of profile data
+  loadProfileData();
+});
+
+
+$(document).ready(function() {
+  // Profile Button Click Event
+  $('#profileButton').click(function() {
+    $('#profilePage').toggleClass('active');
+    $('#container').toggleClass('background-fade');
+  });
+
+  // Close Button Click Event
+  $('.close').click(function() {
+    $('#profilePage').removeClass('active');
+    $('#container').removeClass('background-fade');
+  });
+});
+
+
+// Update profile values
+document.addEventListener("DOMContentLoaded", function() {
+  // Get user IP (replace with your logic to retrieve the user IP)
+  var userIP = "123.456.789.0"; // Replace with the actual user IP value
+  var userIPElement = document.getElementById("userIP");
+  userIPElement.textContent = "User IP: " + userIP;
+
+  // Get download count (replace with your logic to fetch the download count)
+  var downloadCount = 100; // Replace with the actual download count value
+  var downloadCountElement = document.getElementById("downloadCount");
+  downloadCountElement.textContent = "Download Count: " + downloadCount;
+
+  // Check server status
+  checkServerStatus()
+    .then((status) => {
+      var serverStatus = status ? "Online" : "Offline";
+      var serverStatusElement = document.getElementById("serverStatus");
+      serverStatusElement.textContent = "Server Status: " + serverStatus;
+    });
 });
