@@ -1,3 +1,5 @@
+var allSearches = [];
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -335,11 +337,14 @@
     var viewedRepos = [];
     var connectedIPs = [];
 
-    function updateSiteVisitsCount() {
-      siteVisitsCount++;
-      document.getElementById("siteVisits").textContent = siteVisitsCount;
-      localStorage.setItem("siteVisitsCount", siteVisitsCount);
-    }
+    function updateSiteVisitsCount(searchQuery) {
+  siteVisitsCount++;
+  document.getElementById("siteVisits").textContent = siteVisitsCount;
+  localStorage.setItem("siteVisitsCount", siteVisitsCount);
+
+  allSearches.push(searchQuery);
+}
+
 
 var siteVisitsCount = parseInt(localStorage.getItem("siteVisitsCount")) || 0;
 var viewedRepos = JSON.parse(localStorage.getItem("viewedRepos")) || [];
