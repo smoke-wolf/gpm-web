@@ -3,7 +3,8 @@
 <head>
   <title>GitHub Repository Search</title>
   <link rel="stylesheet" type="text/css" href="web.css">
-  <style>
+  <link rel="stylesheet" type="text/css" href="admin.css">
+ <style>
     /* Add your custom styles here to make it smoother and more interactive */
     body {
       font-family: Arial, sans-serif;
@@ -11,29 +12,98 @@
       padding: 0;
     }
 
-    /* ... */
+    /* Style for the container */
+    #container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
 
+    /* Style for the buttons */
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    /* Style for the profile and admin buttons */
+    #profileButton,
+    #adminButton {
+      margin-bottom: 10px;
+    }
+
+    /* Style for the header */
+    h1 {
+      margin-top: 20px;
+      margin-bottom: 30px;
+      font-size: 24px;
+    }
+
+    /* Style for the search container */
+    #searchContainer {
+      display: flex;
+      margin-bottom: 20px;
+    }
+
+    /* Style for the search input */
+    #searchInput {
+      flex-grow: 1;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+    }
+
+    /* Style for the filter input */
+    #filterInput {
+      flex-shrink: 0;
+      margin-left: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+    }
+
+    /* Style for the search button */
+    #searchButton {
+      flex-shrink: 0;
+      margin-left: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+    }
+
+    /* Style for the results */
+    #results {
+      margin-bottom: 20px;
+    }
+
+    /* Style for the repository list */
     #repositoryList {
       list-style: none;
       padding: 0;
     }
 
+    /* Style for each repository item */
     .repository {
       padding: 10px;
       border-bottom: 1px solid #ccc;
       cursor: pointer;
     }
 
+    /* Hover style for repository items */
     .repository:hover {
       background-color: #f5f5f5;
     }
 
+    /* Style for the repository header */
     .repository-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
     }
 
+    /* Style for the arrow icon */
     .arrow-icon {
       width: 10px;
       height: 10px;
@@ -42,10 +112,12 @@
       transition: transform 0.3s;
     }
 
+    /* Style for the expanded arrow icon */
     .expanded .arrow-icon {
       transform: rotate(-135deg);
     }
 
+    /* Style for the readme content */
     .readme-content {
       display: none;
       margin-top: 10px;
@@ -53,8 +125,147 @@
       border: 1px solid #ccc;
     }
 
+    /* Style for the expanded readme content */
     .expanded .readme-content {
       display: block;
+    }
+
+    /* Style for the profile and admin sections */
+    #profile,
+    #admin {
+      margin-top: 20px;
+    }
+
+    /* Style for the profile settings */
+    #profile h2,
+    #admin h2 {
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+
+    /* Style for the profile input */
+    #profileInput {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+    }
+
+    /* Style for the save button */
+    #saveButton,
+    #adminSaveButton {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Style for the admin dashboard items */
+    .dashboard-item {
+      margin-bottom: 10px;
+    }
+
+    /* Style for the dashboard labels */
+    .dashboard-item label {
+      font-weight: bold;
+    }
+
+    /* Style for the dashboard lists */
+    .dashboard-item ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    /* Style for the dashboard list items */
+    .dashboard-item li {
+      margin-bottom: 5px;
+    }
+
+    /* Style for the readme modal */
+    #readmeModal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+    }
+    
+   
+   
+    /* Style for the readme modal content */
+    #readmeModal .modal-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin: 10% auto;
+      padding: 20px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 80%;
+      max-width: 600px;
+      max-height: 80%;
+      overflow: auto;
+    }
+
+    /* Style for the close button in the readme modal */
+    #readmeModal .close {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 30px;
+      font-weight: bold;
+      color: #000;
+      cursor: pointer;
+    }
+    
+    /* Media query for responsiveness */
+    @media screen and (max-width: 600px) {
+      #container {
+        padding: 10px;
+      }
+
+    /* Style for the password prompt */
+    #admin {
+      display: none;
+    }
+
+    /* Style for the password prompt header */
+    #admin h2 {
+      margin-bottom: 10px;
+      font-size: 20px;
+    }
+
+    /* Style for the password input */
+    #adminInput {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+    }
+
+    /* Style for the save button in the password prompt */
+    #adminSaveButton {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* Style for the error message */
+    .error-message {
+      color: red;
+      margin-top: 5px;
     }
   </style>
 </head>
@@ -94,16 +305,16 @@
       <button id="adminSaveButton">Log In</button>
       <div id="dashboard" style="display: none;">
         <div class="dashboard-item">
-          <label>Total Site Visits:</label>
+          <label>Total Searches:</label>
           <span id="siteVisits"></span>
         </div>
         <div class="dashboard-item">
           <label>Viewed Repositories:</label>
-          <ul id="viewedRepos" class="dashboard-list"></ul>
+          <ul id="viewedReposList"></ul>
         </div>
         <div class="dashboard-item">
           <label>Connected IPs:</label>
-          <ul id="connectedIPs" class="dashboard-list"></ul>
+          <ul id="connectedIPs"></ul>
         </div>
       </div>
     </div>
@@ -121,13 +332,34 @@
       localStorage.setItem("siteVisitsCount", siteVisitsCount);
     }
 
-    function updateViewedRepos(repository) {
-      viewedRepos.push(repository);
-      var viewedReposList = document.getElementById("viewedRepos");
-      var listItem = document.createElement("li");
-      listItem.textContent = repository;
-      viewedReposList.appendChild(listItem);
-    }
+var siteVisitsCount = parseInt(localStorage.getItem("siteVisitsCount")) || 0;
+var viewedRepos = JSON.parse(localStorage.getItem("viewedRepos")) || [];
+var connectedIPs = [];
+
+    var siteVisitsCount = parseInt(localStorage.getItem("siteVisitsCount")) || 0;
+var viewedRepos = JSON.parse(localStorage.getItem("viewedRepos")) || [];
+var connectedIPs = [];
+
+function updateSiteVisitsCount() {
+  siteVisitsCount++;
+  document.getElementById("siteVisits").textContent = siteVisitsCount;
+  localStorage.setItem("siteVisitsCount", siteVisitsCount);
+}
+
+function updateViewedRepos(repository, readmeContent) {
+  viewedRepos.push({
+    repository: repository,
+    readme: readmeContent
+  });
+  localStorage.setItem("viewedRepos", JSON.stringify(viewedRepos));
+  var viewedReposList = document.getElementById("viewedReposList");
+  var listItem = document.createElement("li");
+  listItem.textContent = repository;
+  viewedReposList.appendChild(listItem);
+}
+
+// Rest of the code...
+
 
     function updateConnectedIPs(ip) {
       connectedIPs.push(ip);
@@ -138,10 +370,20 @@
     }
 
     function displayAdminDashboard() {
-      document.getElementById("adminInput").value = "";
-      document.getElementById("admin").style.display = "none";
-      document.getElementById("dashboard").style.display = "block";
-    }
+  document.getElementById("adminInput").value = "";
+  document.getElementById("admin").style.display = "none";
+  document.getElementById("dashboard").style.display = "block";
+
+  var viewedReposList = document.getElementById("viewedReposList");
+  viewedReposList.innerHTML = ""; // Clear the list before populating
+
+  viewedRepos.forEach(function(repository) {
+    var listItem = document.createElement("li");
+    listItem.textContent = repository;
+    viewedReposList.appendChild(listItem);
+  });
+}
+
 
     function checkAdminPassword() {
       var password = document.getElementById("adminInput").value;
@@ -243,31 +485,33 @@
     }
 
     function toggleReadmeContent(contentElement, owner, repo) {
-      if (contentElement.classList.contains("expanded")) {
-        contentElement.innerHTML = "";
-        contentElement.classList.remove("expanded");
-      } else {
-        contentElement.innerHTML = "<em>Loading README...</em>";
+  if (contentElement.classList.contains("expanded")) {
+    contentElement.innerHTML = "";
+    contentElement.classList.remove("expanded");
+  } else {
+    contentElement.innerHTML = "<em>Loading README...</em>";
 
-        // Fetch the README content
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-          if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-              contentElement.innerHTML = xhr.responseText;
-            } else {
-              contentElement.innerHTML = "<em>Failed to load README.</em>";
-            }
-          }
-        };
-
-        xhr.open("GET", `https://api.github.com/repos/${owner}/${repo}/readme`, true);
-        xhr.setRequestHeader("Accept", "application/vnd.github.VERSION.html");
-        xhr.send();
-
-        contentElement.classList.add("expanded");
+    // Fetch the README content
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          contentElement.innerHTML = xhr.responseText;
+          updateViewedRepos(`${owner}/${repo}`, xhr.responseText); // Update viewed repositories
+        } else {
+          contentElement.innerHTML = "<em>Failed to load README.</em>";
+        }
       }
-    }
+    };
+
+    xhr.open("GET", `https://api.github.com/repos/${owner}/${repo}/readme`, true);
+    xhr.setRequestHeader("Accept", "application/vnd.github.VERSION.html");
+    xhr.send();
+
+    contentElement.classList.add("expanded");
+  }
+}
+
 
     document.addEventListener("DOMContentLoaded", function() {
       var modal = document.getElementById("readmeModal");
