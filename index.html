@@ -3,23 +3,75 @@
 <head>
   <title>GitHub Repository Search</title>
   <link rel="stylesheet" type="text/css" href="web.css">
+  <style>
+    /* Add your custom styles here to make it smoother and more interactive */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ... */
+
+    #repositoryList {
+      list-style: none;
+      padding: 0;
+    }
+
+    .repository {
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+      cursor: pointer;
+    }
+
+    .repository:hover {
+      background-color: #f5f5f5;
+    }
+
+    .repository-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .arrow-icon {
+      width: 10px;
+      height: 10px;
+      background-color: black;
+      transform: rotate(45deg);
+      transition: transform 0.3s;
+    }
+
+    .expanded .arrow-icon {
+      transform: rotate(-135deg);
+    }
+
+    .readme-content {
+      display: none;
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .expanded .readme-content {
+      display: block;
+    }
+  </style>
 </head>
 <body>
   <div id="container">
     <button id="profileButton">Profile</button>
+    <button id="adminButton">Admin</button>
     <h1>GitHub Repository Search</h1>
-
-    <!-- Admin Dashboard Button -->
-    <button id="adminButton" onclick="showAdminDashboard()">Admin Dashboard</button>
 
     <div id="searchContainer">
       <input type="text" id="searchInput" placeholder="Search repositories">
       <select id="filterInput">
         <option value="none">No Filter</option>
         <option value="user">User</option>
-        <option value="recent">Most Recent Update</option>
-        <option value="stars">Most Stars</option>
-        <option value="downloads">Most Downloads</option>
+        <option value="recent">Recent</option>
+        <option value="stars">Stars</option>
+        <option value="downloads">Downloads</option>
       </select>
       <button id="searchButton">Search</button>
     </div>
@@ -28,56 +80,97 @@
       <ul id="repositoryList"></ul>
     </div>
 
-    <div id="readmeModal" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <div id="readmeContent"></div>
-      </div>
+    <div id="profile" style="display: none;">
+      <h2>Profile Settings</h2>
+      <label for="profileInput">Profile URL:</label>
+      <input type="text" id="profileInput" placeholder="Enter profile URL">
+      <button id="saveButton">Save</button>
     </div>
 
-    <!-- Admin Dashboard Section -->
-    <div id="adminDashboard">
+    <div id="admin" style="display: none;">
       <h2>Admin Dashboard</h2>
-      <p id="siteVisits">Site Visits: 0</p>
-      <p id="selectedRepositories">Selected Repositories: 0</p>
-      <p id="timeSpent">Time Spent on Site: 0 seconds</p>
-    </div>
-  </div>
-
-  <!-- Profile Page -->
-  <div id="profilePage">
-    <div class="profile-content">
-      <span class="close">&times;</span>
-      <h2>Profile</h2>
-      <p id="userIP"></p>
-      <p id="downloadCount"></p>
-      <p id="serverStatus"></p>
+      <label for="adminInput">Enter Password:</label>
+      <input type="password" id="adminInput" placeholder="Password">
+      <button id="adminSaveButton">Log In</button>
+      <div id="dashboard" style="display: none;">
+        <div class="dashboard-item">
+          <label>Total Site Visits:</label>
+          <span id="siteVisits"></span>
+        </div>
+        <div class="dashboard-item">
+          <label>Viewed Repositories:</label>
+          <ul id="viewedRepos" class="dashboard-list"></ul>
+        </div>
+        <div class="dashboard-item">
+          <label>Connected IPs:</label>
+          <ul id="connectedIPs" class="dashboard-list"></ul>
+        </div>
+      </div>
     </div>
   </div>
 
   <script src="web.js"></script>
   <script>
-    var siteVisits = 0;
-    var selectedRepositories = 0;
-    var timeSpent = 0;
-    var startTime = new Date().getTime();
-    var adminDashboardVisible = false;
-    var adminPasswordHash = "eeba0fda1ce4f5d20678f2e9e2b1ce2305fba1e211da5e1be8c2434f6d780e3d"; // Hashed password for "Victoria2021!"
+    var siteVisitsCount = parseInt(localStorage.getItem("siteVisitsCount")) || 0;
+    var viewedRepos = [];
+    var connectedIPs = [];
+
+    function updateSiteVisitsCount() {
+      siteVisitsCount++;
+      document.getElementById("siteVisits").textContent = siteVisitsCount;
+      localStorage.setItem("siteVisitsCount", siteVisitsCount);
+    }
+
+    function updateViewedRepos(repository) {
+      viewedRepos.push(repository);
+      var viewedReposList = document.getElementById("viewedRepos");
+      var listItem = document.createElement("li");
+      listItem.textContent = repository;
+      viewedReposList.appendChild(listItem);
+    }
+
+    function updateConnectedIPs(ip) {
+      connectedIPs.push(ip);
+      var connectedIPsList = document.getElementById("connectedIPs");
+      var listItem = document.createElement("li");
+      listItem.textContent = ip;
+      connectedIPsList.appendChild(listItem);
+    }
+
+    function displayAdminDashboard() {
+      document.getElementById("adminInput").value = "";
+      document.getElementById("admin").style.display = "none";
+      document.getElementById("dashboard").style.display = "block";
+    }
+
+    function checkAdminPassword() {
+      var password = document.getElementById("adminInput").value;
+      if (password === "admin_user") {
+        displayAdminDashboard();
+      } else {
+        alert("Invalid password. Please try again.");
+      }
+    }
+
+    document.getElementById("adminButton").addEventListener("click", function() {
+      document.getElementById("admin").style.display = "block";
+    });
+
+    document.getElementById("adminSaveButton").addEventListener("click", function() {
+      checkAdminPassword();
+    });
 
     document.getElementById("searchButton").addEventListener("click", function() {
-      // Log selected repositories
-      selectedRepositories++;
-      updateAdminDashboard();
-
-      // Perform search and display results
       var searchInput = document.getElementById("searchInput").value;
+      var filterInput = document.getElementById("filterInput").value;
       var xhr = new XMLHttpRequest();
 
       xhr.onreadystatechange = function() {
         if (xhr.readyState === 4 && xhr.status === 200) {
           var response = JSON.parse(xhr.responseText);
-          var filteredRepositories = filterRepositories(response.items, searchInput);
-          displayResults(filteredRepositories);
+          var filteredResults = filterResults(response.items, filterInput);
+          displayResults(filteredResults);
+          updateSiteVisitsCount(); // Increment site visits count on search
         }
       };
 
@@ -85,42 +178,28 @@
       xhr.send();
     });
 
-    function filterRepositories(repositories, searchInput) {
-      var filteredRepositories = repositories.filter(function(repository) {
-        var fullName = repository.full_name.toLowerCase();
-        var owner = repository.owner.login.toLowerCase();
-        return fullName.includes(searchInput.toLowerCase()) || owner.includes(searchInput.toLowerCase());
-      });
-
-      filteredRepositories.sort(function(a, b) {
-        var filterValue = document.getElementById("filterInput").value;
-        if (filterValue === "user") {
-          // Sort by user
-          var ownerA = a.owner.login.toLowerCase();
-          var ownerB = b.owner.login.toLowerCase();
-          return ownerA.localeCompare(ownerB);
-        } else if (filterValue === "recent") {
-          // Sort by most recent update
-          var updatedAtA = new Date(a.updated_at).getTime();
-          var updatedAtB = new Date(b.updated_at).getTime();
-          return updatedAtB - updatedAtA;
-        } else if (filterValue === "stars") {
-          // Sort by most stars
-          var starsA = a.stargazers_count;
-          var starsB = b.stargazers_count;
-          return starsB - starsA;
-        } else if (filterValue === "downloads") {
-          // Sort by most downloads (assuming the download count is available)
-          var downloadsA = a.downloads_count || 0;
-          var downloadsB = b.downloads_count || 0;
-          return downloadsB - downloadsA;
-        } else {
-          // No filter selected, maintain the default order
-          return 0;
-        }
-      });
-
-      return filteredRepositories;
+    function filterResults(repositories, filterInput) {
+      if (filterInput === "user") {
+        return repositories.sort(function(a, b) {
+          return a.owner.login.localeCompare(b.owner.login);
+        });
+      } else if (filterInput === "recent") {
+        return repositories.sort(function(a, b) {
+          var dateA = new Date(a.updated_at);
+          var dateB = new Date(b.updated_at);
+          return dateB - dateA;
+        });
+      } else if (filterInput === "stars") {
+        return repositories.sort(function(a, b) {
+          return b.stargazers_count - a.stargazers_count;
+        });
+      } else if (filterInput === "downloads") {
+        return repositories.sort(function(a, b) {
+          return b.downloads_count - a.downloads_count;
+        });
+      } else {
+        return repositories;
+      }
     }
 
     function displayResults(repositories) {
@@ -140,146 +219,70 @@
 
         var description = document.createElement("p");
         description.textContent = repository.description;
-        if (description.textContent.length > 150) {
-          description.textContent = description.textContent.substring(0, 150) + "...";
-        }
 
         var arrowIcon = document.createElement("span");
         arrowIcon.className = "arrow-icon";
-
-        var downloadButton = document.createElement("button");
-        downloadButton.textContent = "Download & Install";
-        downloadButton.classList.add("download-button");
-        downloadButton.addEventListener("click", function() {
-          runCommandLocally(repository.owner.login, repository.name);
-        });
 
         header.appendChild(repoLink);
         header.appendChild(description);
         header.appendChild(arrowIcon);
 
-        listItem.appendChild(header);
-        listItem.appendChild(downloadButton);
-
         var readmeContent = document.createElement("div");
         readmeContent.className = "readme-content";
+
+        listItem.appendChild(header);
         listItem.appendChild(readmeContent);
 
         listItem.addEventListener("click", function() {
           toggleReadmeContent(readmeContent, repository.owner.login, repository.name);
+          updateViewedRepos(repository.full_name); // Update viewed repositories
         });
 
         repositoryList.appendChild(listItem);
       });
     }
 
-    function updateAdminDashboard() {
-      var siteVisitsElement = document.getElementById("siteVisits");
-      siteVisitsElement.textContent = "Site Visits: " + siteVisits;
-
-      var selectedRepositoriesElement = document.getElementById("selectedRepositories");
-      selectedRepositoriesElement.textContent = "Selected Repositories: " + selectedRepositories;
-
-      var timeSpentElement = document.getElementById("timeSpent");
-      timeSpentElement.textContent = "Time Spent on Site: " + formatTime(timeSpent) + " seconds";
-    }
-
-    function formatTime(milliseconds) {
-      var seconds = Math.floor(milliseconds / 1000);
-      return seconds;
-    }
-
-    function showAdminDashboard() {
-      var password = prompt("Enter admin password:");
-      var hashedPassword = sha256(password);
-
-      if (hashedPassword === adminPasswordHash) {
-        adminDashboardVisible = true;
-        document.getElementById("adminDashboard").style.display = "block";
-        updateAdminDashboard();
+    function toggleReadmeContent(contentElement, owner, repo) {
+      if (contentElement.classList.contains("expanded")) {
+        contentElement.innerHTML = "";
+        contentElement.classList.remove("expanded");
       } else {
-        alert("Incorrect password. Access denied.");
+        contentElement.innerHTML = "<em>Loading README...</em>";
+
+        // Fetch the README content
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              contentElement.innerHTML = xhr.responseText;
+            } else {
+              contentElement.innerHTML = "<em>Failed to load README.</em>";
+            }
+          }
+        };
+
+        xhr.open("GET", `https://api.github.com/repos/${owner}/${repo}/readme`, true);
+        xhr.setRequestHeader("Accept", "application/vnd.github.VERSION.html");
+        xhr.send();
+
+        contentElement.classList.add("expanded");
       }
     }
 
-    function hideAdminDashboard() {
-      adminDashboardVisible = false;
-      document.getElementById("adminDashboard").style.display = "none";
-    }
+    document.addEventListener("DOMContentLoaded", function() {
+      var modal = document.getElementById("readmeModal");
+      var closeModal = document.getElementsByClassName("close")[0];
 
-    function toggleReadmeContent(readmeContent, owner, repo) {
-      if (readmeContent.style.display === "block") {
-        readmeContent.style.display = "none";
-      } else {
-        readmeContent.style.display = "block";
-        fetchReadmeContent(owner, repo, readmeContent);
-      }
-    }
+      closeModal.addEventListener("click", function() {
+        modal.style.display = "none";
+      });
 
-    function fetchReadmeContent(owner, repo, readmeContent) {
-      var xhr = new XMLHttpRequest();
-
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          var response = JSON.parse(xhr.responseText);
-          var content = atob(response.content);
-          readmeContent.textContent = content;
+      window.addEventListener("click", function(event) {
+        if (event.target === modal) {
+          modal.style.display = "none";
         }
-      };
-
-      xhr.open("GET", "https://api.github.com/repos/" + owner + "/" + repo + "/readme", true);
-      xhr.setRequestHeader("Accept", "application/vnd.github.VERSION.raw");
-      xhr.send();
-    }
-
-    function runCommandLocally(owner, repo) {
-      alert("Running 'npm install " + owner + "/" + repo + "'");
-    }
-
-    function sha256(message) {
-      var sha256Hash = CryptoJS.SHA256(message);
-      return sha256Hash.toString(CryptoJS.enc.Hex);
-    }
-
-    // Profile Page
-    var profileButton = document.getElementById("profileButton");
-    var profilePage = document.getElementById("profilePage");
-    var userIP = document.getElementById("userIP");
-    var downloadCount = document.getElementById("downloadCount");
-    var serverStatus = document.getElementById("serverStatus");
-    var closeButtons = document.querySelectorAll(".close");
-
-    profileButton.addEventListener("click", function() {
-      profilePage.style.display = "block";
-      retrieveProfileData();
-    });
-
-    closeButtons.forEach(function(closeButton) {
-      closeButton.addEventListener("click", function() {
-        profilePage.style.display = "none";
       });
     });
-
-    function retrieveProfileData() {
-      // Simulating profile data retrieval
-      var userIPData = "User IP: 123.45.67.89";
-      var downloadCountData = "Download Count: 100";
-      var serverStatusData = "Server Status: Online";
-
-      userIP.textContent = userIPData;
-      downloadCount.textContent = downloadCountData;
-      serverStatus.textContent = serverStatusData;
-    }
-
-    // Admin Dashboard Timer
-    setInterval(function() {
-      if (adminDashboardVisible) {
-        var currentTime = new Date().getTime();
-        timeSpent += currentTime - startTime;
-        startTime = currentTime;
-        updateAdminDashboard();
-      }
-    }, 1000);
   </script>
 </body>
 </html>
