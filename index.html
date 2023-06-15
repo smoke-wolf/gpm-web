@@ -347,15 +347,32 @@ function updateSiteVisitsCount() {
 }
 
 function updateViewedRepos(repository, readmeContent) {
-  viewedRepos.push({
-    repository: repository,
-    readme: readmeContent
+  // Check if the repository already exists in the viewedRepos array
+  var existingRepo = viewedRepos.find(function(repo) {
+    return repo.repository === repository;
   });
+
+  if (existingRepo) {
+    // If the repository exists, increment the visit count
+    existingRepo.visits += 1;
+  } else {
+    // Otherwise, add a new entry with visit count initialized to 1
+    viewedRepos.push({
+      repository: repository,
+      visits: 1,
+      readme: readmeContent
+    });
+  }
+
   localStorage.setItem("viewedRepos", JSON.stringify(viewedRepos));
   var viewedReposList = document.getElementById("viewedReposList");
-  var listItem = document.createElement("li");
-  listItem.textContent = repository;
-  viewedReposList.appendChild(listItem);
+  viewedReposList.innerHTML = ""; // Clear the list before populating
+
+  viewedRepos.forEach(function(repo) {
+    var listItem = document.createElement("li");
+    listItem.textContent = repo.repository + " (" + repo.visits + " visits)";
+    viewedReposList.appendChild(listItem);
+  });
 }
 
 // Rest of the code...
@@ -377,12 +394,13 @@ function updateViewedRepos(repository, readmeContent) {
   var viewedReposList = document.getElementById("viewedReposList");
   viewedReposList.innerHTML = ""; // Clear the list before populating
 
-  viewedRepos.forEach(function(repository) {
+  viewedRepos.forEach(function(repo) {
     var listItem = document.createElement("li");
-    listItem.textContent = repository;
+    listItem.textContent = repo.repository + " (" + repo.visits + " visits)";
     viewedReposList.appendChild(listItem);
   });
 }
+
 
 
     function checkAdminPassword() {
@@ -516,6 +534,15 @@ function updateViewedRepos(repository, readmeContent) {
     document.addEventListener("DOMContentLoaded", function() {
       var modal = document.getElementById("readmeModal");
       var closeModal = document.getElementsByClassName("close")[0];
+      adminButton.addEventListener("click", () => {
+  clearRepositories();
+  displayAdminSection();
+});
+
+function clearRepositories() {
+  const repositoryList = document.getElementById("repositoryList");
+  repositoryList.innerHTML = "";
+}
 
       closeModal.addEventListener("click", function() {
         modal.style.display = "none";
