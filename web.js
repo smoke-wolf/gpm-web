@@ -203,25 +203,33 @@ document.addEventListener("DOMContentLoaded", function() {
     downloadCount.textContent = "Download Count: 0"; // Replace 0 with actual download count
 
     // Check server status
-    checkServerStatus();
+    checkServerStatus(serverStatus);
   }
 
   function checkServerStatus() {
-    var serverUrl = "http://localhost:3000"; // Replace with your server URL
+  var serverUrl = "http://localhost:3000/status"; // Replace with your server URL
 
-    fetch(serverUrl)
-      .then(response => {
-        if (response.ok) {
-          serverStatus.textContent = "Server Status: Online";
-        } else {
-          serverStatus.textContent = "Server Status: Offline";
-        }
-      })
-      .catch(error => {
-        serverStatus.textContent = "Server Status: Offline";
-      });
-  }
+  fetch(serverUrl)
+    .then(response => {
+      if (response.status === 200) {
+        return response.json(); // Parse the response as JSON
+      } else {
+        throw new Error("Server response was not OK");
+      }
+    })
+    .then(data => {
+      serverStatus.textContent = "Server Status: Online";
+    })
+    .catch(error => {
+      serverStatus.textContent = "Server Status: Offline";
+    });
+}
+
+
+  // Initial load of profile data
+  loadProfileData();
 });
+
 
 $(document).ready(function() {
   // Profile Button Click Event
@@ -237,22 +245,24 @@ $(document).ready(function() {
   });
 });
 
-function checkServerStatus() {
-  var serverUrl = "http://localhost:3000"; // Replace with your server URL
 
-  return fetch(serverUrl)
-    .then(response => {
-      if (response.ok) {
-        return true;
-      } else {
-        return false;
-      }
-    })
-    .catch(error => {
-      return false;
-    });
-}
 // Update profile values
-document.getElementById("userIP").textContent = "User IP: " + userIP; // Replace `userIP` with the actual user IP value
-document.getElementById("downloadCount").textContent = "Download Count: " + downloadCount; // Replace `downloadCount` with the actual download count value
-document.getElementById("serverStatus").textContent = "Server Status: " + serverStatus; // Replace `serverStatus` with the actual server status value
+document.addEventListener("DOMContentLoaded", function() {
+  // Get user IP (replace with your logic to retrieve the user IP)
+  var userIP = "123.456.789.0"; // Replace with the actual user IP value
+  var userIPElement = document.getElementById("userIP");
+  userIPElement.textContent = "User IP: " + userIP;
+
+  // Get download count (replace with your logic to fetch the download count)
+  var downloadCount = 100; // Replace with the actual download count value
+  var downloadCountElement = document.getElementById("downloadCount");
+  downloadCountElement.textContent = "Download Count: " + downloadCount;
+
+  // Check server status
+  checkServerStatus()
+    .then((status) => {
+      var serverStatus = status ? "Online" : "Offline";
+      var serverStatusElement = document.getElementById("serverStatus");
+      serverStatusElement.textContent = "Server Status: " + serverStatus;
+    });
+});
