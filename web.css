@@ -1,6 +1,6 @@
 body {
-  background-color: #000;
-  color: #fff;
+  background-color: #0f0c0d;
+  color: #ededec;
   font-family: Arial, sans-serif;
 }
 
@@ -49,13 +49,13 @@ h1 {
 }
 
 #results {
-  max-height: 600px; /* Increase the max-height value */
+  max-height: 600px;
   overflow-y: scroll;
   scrollbar-width: thin;
 }
 
 .repository {
-  margin-bottom: 30px; /* Increase the margin-bottom value */
+  margin-bottom: 30px;
   padding: 10px;
   border-radius: 5px;
   background-color: #333;
@@ -66,7 +66,7 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px; /* Increase the margin-bottom value */
+  margin-bottom: 10px;
 }
 
 .repository a {
@@ -76,7 +76,7 @@ h1 {
 
 .repository p {
   color: #aaa;
-  margin-bottom: 10px; /* Increase the margin-bottom value */
+  margin-bottom: 10px;
 }
 
 .arrow-icon::after {
@@ -93,12 +93,12 @@ h1 {
 .readme-content {
   display: none;
   padding: 10px;
-  margin-top: 10px; /* Increase the margin-top value */
+  margin-top: 10px;
   background-color: #222;
   color: #fff;
   font-size: 14px;
   line-height: 1.5;
-  max-height: 400px; /* Increase the max-height value */
+  max-height: 400px;
   overflow-y: scroll;
 }
 
