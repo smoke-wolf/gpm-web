@@ -47,6 +47,33 @@ h1 {
   cursor: pointer;
   margin-right: 10px;
 }
+#installButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #555;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 10px;
+}
+#activateButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #555;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 10px;
+}
+#uninstallButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #555;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 10px;
+}
 
 #results {
   max-height: 600px;
