@@ -1,38 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GitHub Repository Search</title>
   <link rel="stylesheet" type="text/css" href="web.css">
 </head>
 <body>
-  <div id="container">
-    <button id="profileButton">Profile</button>
-    <button id="installButton" onclick="window.location.href = 'install.html';">Activate</button>
-    <button id="activateButton" onclick="window.location.href = 'activate.html';">Uninstall</button>
-    <button id="uninstallButton" onclick="window.location.href = 'uninstall.html';">Install &lt;2&gt;</button>
+  <header>
     <h1>GitHub Repository Search</h1>
+    <div class="buttons">
+      <button id="profileButton">Profile</button>
+      <button id="installButton" onclick="window.location.href = 'install.html';">Activate</button>
+      <button id="activateButton" onclick="window.location.href = 'activate.html';">Uninstall</button>
+      <button id="uninstallButton" onclick="window.location.href = 'uninstall.html';">Install &lt;2&gt;</button>
+    </div>
+  </header>
 
+  <div id="container">
     <div id="searchContainer">
       <input type="text" id="searchInput" placeholder="Search repositories">
-      <select id="filterInput">
-        <option value="none">No Filter</option>
-        <option value="user">User</option>
-        <option value="recent">Most Recent Update</option>
-        <option value="stars">Most Stars</option>
-        <option value="downloads">Most Downloads</option>
-      </select>
       <button id="searchButton">Search</button>
     </div>
 
     <div id="results">
       <ul id="repositoryList"></ul>
-    </div>
-
-    <div id="readmeModal" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <div id="readmeContent"></div>
-      </div>
     </div>
   </div>
 
@@ -47,7 +39,13 @@
     </div>
   </div>
 
+  <div id="readmeModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div id="readmeContent"></div>
+    </div>
+  </div>
+
   <script src="web.js"></script>
 </body>
 </html>
-
