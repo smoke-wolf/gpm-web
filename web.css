@@ -1,19 +1,29 @@
+/* Reset some default styles */
 body {
-  background-color: #0f0c0d;
-  color: #ededec;
+  background-color: #BAD7F2;
+  color: #E1E6E1;
   font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
+/* Center the container */
 #container {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+  background-color: #E1E6E1;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Center the h1 */
 h1 {
   text-align: center;
+  margin-bottom: 20px;
 }
 
+/* Style the search container */
 #searchContainer {
   display: flex;
   align-items: center;
@@ -21,71 +31,46 @@ h1 {
   margin-bottom: 20px;
 }
 
+/* Style the search input */
 #searchInput {
   padding: 10px;
   border: none;
   border-radius: 5px 0 0 5px;
-  background-color: #333;
-  color: #fff;
+  background-color: #136f63;
+  color: #E1E6E1;
+  flex: 1;
 }
 
-#searchButton {
+/* Style the search button */
+#searchButton, #profileButton, #installButton, #activateButton, #uninstallButton {
   padding: 10px 20px;
   border: none;
   border-radius: 0 5px 5px 0;
-  background-color: #555;
-  color: #fff;
   cursor: pointer;
 }
 
-#profileButton {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: #555;
-  color: #fff;
-  cursor: pointer;
-  margin-right: 10px;
-}
-#installButton {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: #555;
-  color: #fff;
-  cursor: pointer;
-  margin-right: 10px;
-}
-#activateButton {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: #555;
-  color: #fff;
-  cursor: pointer;
-  margin-right: 10px;
-}
-#uninstallButton {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: #555;
-  color: #fff;
-  cursor: pointer;
+/* Style the profile and action buttons */
+#searchButton, #profileButton, #installButton, #activateButton, #uninstallButton {
+  background-color: #E49273;
+  color: #E1E6E1;
   margin-right: 10px;
 }
 
+/* Style the results container */
 #results {
   max-height: 600px;
   overflow-y: scroll;
   scrollbar-width: thin;
+  text-align: left;
+  margin-top: 20px;
 }
 
+/* Style the repository items */
 .repository {
   margin-bottom: 30px;
   padding: 10px;
   border-radius: 5px;
-  background-color: #333;
+  background-color: #136f63;
   cursor: pointer;
 }
 
@@ -97,15 +82,29 @@ h1 {
 }
 
 .repository a {
-  color: #fff;
+  color: #E1E6E1;
   text-decoration: none;
 }
 
+/* Style the repository links */
+.repository a {
+  color: #E1E6E1;
+  text-decoration: none;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+/* Add a subtle text shadow on hover */
+.repository a:hover {
+  color: #CBEFB6;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+}
+
 .repository p {
-  color: #aaa;
+  color: ;
   margin-bottom: 10px;
 }
 
+/* Style the arrow icon */
 .arrow-icon::after {
   content: "\25B8";
   font-size: 10px;
@@ -117,12 +116,13 @@ h1 {
   transform: rotate(0deg);
 }
 
+/* Style the readme content */
 .readme-content {
   display: none;
   padding: 10px;
   margin-top: 10px;
-  background-color: #222;
-  color: #fff;
+  background-color: #E1E6E1;
+  color: #000F08;
   font-size: 14px;
   line-height: 1.5;
   max-height: 400px;
@@ -147,64 +147,18 @@ h1 {
 }
 
 .modal-content {
-  background-color: #111;
+  background-color: #CBEFB6;
   margin: 15% auto;
   padding: 20px;
-  border: 1px solid #888;
+  border: 1px solid #E1E6E1;
   width: 80%;
   max-width: 600px;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.close:hover,
-.close:focus {
-  color: #fff;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-#filterInput {
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: #555;
-  color: #fff;
-  cursor: pointer;
-  margin-right: 10px;
-}
-
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.4);
-}
-
-.modal-content {
-  background-color: #fefefe;
-  margin: 15% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-  max-width: 600px;
   position: relative;
 }
 
 .close {
-  color: #aaa;
+  color: #E49273;
   float: right;
   font-size: 28px;
   font-weight: bold;
@@ -213,26 +167,27 @@ h1 {
 
 .close:hover,
 .close:focus {
-  color: black;
+  color: #000F08;
   text-decoration: none;
   cursor: pointer;
 }
 
+/* Profile Page Styles */
 #profilePage .profile-content p {
   font-size: 16px;
   margin-bottom: 10px;
 }
 
 #profilePage .profile-content p#userIP {
-  color: #333;
+  color: #136f63;
 }
 
 #profilePage .profile-content p#downloadCount {
-  color: #555;
+  color: #E49273;
 }
 
 #profilePage .profile-content p#serverStatus {
-  color: #777;
+  color:#E49273;
 }
 
 .profile-page {
@@ -251,7 +206,7 @@ h1 {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: white;
+  background-color: #E1E6E1;
   padding: 20px;
   text-align: center;
   border-radius: 5px;
@@ -272,14 +227,4 @@ h1 {
   top: 10px;
   right: 10px;
   cursor: pointer;
-}
-
-#container {
-  position: relative;
-  z-index: 1;
-}
-
-#profileButton {
-  position: relative;
-  z-index: 2;
 }
