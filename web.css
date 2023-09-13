@@ -211,6 +211,7 @@ header h1 {
   position: fixed;
   top: 50%;
   left: 50%;
+  color: #136F63;
   transform: translate(-50%, -50%);
   background-color: #E1E6E1;
   padding: 20px;
