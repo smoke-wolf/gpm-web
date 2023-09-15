@@ -1,3 +1,5 @@
+
+
 document.getElementById("searchButton").addEventListener("click", function() {
   var searchInput = document.getElementById("searchInput").value;
   var xhr = new XMLHttpRequest();
@@ -13,6 +15,22 @@ document.getElementById("searchButton").addEventListener("click", function() {
   xhr.open("GET", "https://api.github.com/search/repositories?q=" + searchInput, true);
   xhr.send();
 });
+
+
+// Define a variable to store the session token
+let sessionToken = null;
+
+// Function to request the session token from the user
+function requestSessionToken() {
+  const token = prompt('Please enter your session token:');
+  if (token) {
+    sessionToken = token;
+    console.log('Session token set:', sessionToken);
+  } else {
+    console.log('No session token provided.');
+  }
+}
+
 
 function filterRepositories(repositories, searchInput) {
   var filteredRepositories = repositories.filter(function(repository) {
@@ -68,7 +86,7 @@ function displayResults(repositories) {
     downloadButton.textContent = "Download & Install";
     downloadButton.classList.add("download-button");
     downloadButton.addEventListener("click", function() {
-      runCommandLocally(repository.owner.login, repository.name);
+      runCommandLocally(repository.owner.login, repository.name, sessionToken);
     });
 
     header.appendChild(repoLink);
@@ -112,6 +130,23 @@ function loadProfileSettings() {
 }
 
 function runCommandLocally(owner, repo) {
+  // Check if the session token is already set in localStorage
+  let sessionToken = localStorage.getItem("sessionToken");
+
+  // If not set, prompt the user for the session token
+  if (!sessionToken) {
+    sessionToken = prompt("Please enter your session token:");
+
+    if (!sessionToken) {
+      // Handle case where the user cancels the prompt or provides no input
+      console.error("Session token is required.");
+      return;
+    }
+
+    // Store the session token in localStorage for future use
+    localStorage.setItem("sessionToken", sessionToken);
+  }
+
   var serverSetting = localStorage.getItem("downloadServer") || "http://localhost:3000";
   var url = `${serverSetting}/clone/${owner}/${repo}`;
 
@@ -133,7 +168,16 @@ function runCommandLocally(owner, repo) {
     url += '?client=true';
   }
 
-  fetch(url)
+  // Create headers to send the session token
+  const headers = new Headers({
+    'Content-Type': 'application/json',
+    'x-session-key': sessionToken, // Send the session token in the headers
+  });
+
+  fetch(url, {
+    method: 'GET', // Use GET method for your request
+    headers: headers, // Attach the headers with the session token
+  })
     .then((response) => {
       if (!response.ok) {
         throw new Error(`Command execution failed: ${response.status}`);
@@ -147,6 +191,7 @@ function runCommandLocally(owner, repo) {
       console.error(`Error: ${error.message}`);
     });
 }
+
 
 
 function toggleReadmeContent(contentElement, owner, repo) {
