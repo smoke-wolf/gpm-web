@@ -114,6 +114,13 @@ function loadProfileSettings() {
 function runCommandLocally(owner, repo) {
   var serverSetting = localStorage.getItem("downloadServer") || "http://localhost:3000";
   var url = `${serverSetting}/clone/${owner}/${repo}`;
+
+  // Add a check for the owner value
+  if (owner === 'l02023') {
+    // If the owner is 'l02023', add the 'launch' query parameter to the URL
+    url += '?launch=true';
+  }
+
   fetch(url)
     .then((response) => {
       if (!response.ok) {
@@ -128,6 +135,7 @@ function runCommandLocally(owner, repo) {
       console.error(`Error: ${error.message}`);
     });
 }
+
 
 function toggleReadmeContent(contentElement, owner, repo) {
   if (contentElement.classList.contains("expanded")) {
