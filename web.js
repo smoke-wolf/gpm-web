@@ -18,21 +18,6 @@ document.getElementById("searchButton").addEventListener("click", function() {
 });
 
 
-// Define a variable to store the session token
-let sessionToken = null;
-
-// Function to request the session token from the user
-function requestSessionToken() {
-  const token = prompt('Please enter your session token:');
-  if (token) {
-    sessionToken = token;
-    console.log('Session token set:', sessionToken);
-  } else {
-    console.log('No session token provided.');
-  }
-}
-
-
 function filterRepositories(repositories, searchInput) {
   var filteredRepositories = repositories.filter(function(repository) {
     var fullName = repository.full_name.toLowerCase();
