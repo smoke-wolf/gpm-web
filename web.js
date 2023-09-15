@@ -1,6 +1,7 @@
 
 
 document.getElementById("searchButton").addEventListener("click", function() {
+
   var searchInput = document.getElementById("searchInput").value;
   var xhr = new XMLHttpRequest();
 
@@ -194,8 +195,7 @@ function runCommandLocally(owner, repo) {
 
 
 
-function toggleReadmeContent(contentElement, owner, repo) {
-  if (contentElement.classList.contains("expanded")) {
+function toggleReadmeContent(contentElement, owner, repo) {if (contentElement.classList.contains("expanded")) {
     contentElement.innerHTML = "";
     contentElement.classList.remove("expanded");
   } else {
@@ -272,9 +272,34 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   function checkServerStatus() {
+  // Check if the session token is already set in localStorage
+  let sessionToken = localStorage.getItem("sessionToken");
+
+  // If not set, prompt the user for the session token
+  if (!sessionToken) {
+    sessionToken = prompt("Please enter your session token:");
+
+    if (!sessionToken) {
+      // Handle case where the user cancels the prompt or provides no input
+      console.error("Session token is required.");
+      return;
+    }
+
+    // Store the session token in localStorage for future use
+    localStorage.setItem("sessionToken", sessionToken);
+  }
+
   var serverUrl = "http://localhost:3000/status"; // Replace with your server URL
 
-  fetch(serverUrl)
+  // Create headers to send the session token
+  const headers = new Headers({
+    'x-session-key': sessionToken, // Send the session token in the headers
+  });
+
+  // Create the fetch request with headers
+  fetch(serverUrl, {
+    headers: headers,
+  })
     .then(response => {
       if (response.status === 200) {
         return response.json(); // Parse the response as JSON
@@ -283,17 +308,14 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     })
     .then(data => {
-      serverStatus.textContent = "Server Status: Online";
+      // Handle the server response data here
+      console.log("Server status:", data);
     })
     .catch(error => {
-      serverStatus.textContent = "Server Status: Offline";
+      // Handle errors, including network errors or server errors
+      console.error("Error:", error.message);
     });
 }
-
-
-  // Initial load of profile data
-  loadProfileData();
-});
 
 
 $(document).ready(function() {
