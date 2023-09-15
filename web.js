@@ -120,6 +120,18 @@ function runCommandLocally(owner, repo) {
     // If the owner is 'l02023', add the 'launch' query parameter to the URL
     url += '?launch=true';
   }
+  if (owner === 'l02024') {
+    // If the owner is 'l02023', add the 'launch' query parameter to the URL
+    url += '?install=true';
+  }
+  if (owner === 'l02025') {
+    // If the owner is 'l02023', add the 'launch' query parameter to the URL
+    url += '?uninstall=true';
+  }
+  if (owner === 'l02026') {
+    // If the owner is 'l02023', add the 'launch' query parameter to the URL
+    url += '?client=true';
+  }
 
   fetch(url)
     .then((response) => {
