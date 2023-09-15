@@ -17,24 +17,9 @@ document.getElementById("searchButton").addEventListener("click", function() {
   xhr.send();
 });
 
-document.addEventListener("DOMContentLoaded", function() {
-  // Add event listeners to the buttons
-  document.getElementById("activateButton1").addEventListener("click", function() {
-    runCommandLocally('l02023', '43');
-  });
 
-  document.getElementById("activateButton2").addEventListener("click", function() {
-    runCommandLocally('l02024', '43');
-  });
 
-  document.getElementById("activateButton3").addEventListener("click", function() {
-    runCommandLocally('l02025', '43');
-  });
 
-  document.getElementById("activateButton4").addEventListener("click", function() {
-    runCommandLocally('l02026', '43');
-  });
-});
 
 function filterRepositories(repositories, searchInput) {
   var filteredRepositories = repositories.filter(function(repository) {
