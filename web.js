@@ -1,48 +1,70 @@
 // Function to request the session token from the user
 function requestSessionToken() {
+  let existingToken = localStorage.getItem("sessionToken");
+  
+  // Check if a session token is already set
+  if (existingToken) {
+    const updateConfirmation = confirm("A session token is already set. Do you want to update it?");
+    
+    if (updateConfirmation) {
+      // User wants to update the token
+      let token = null;
+      while (!token) {
+        token = prompt('Please enter your updated session token:');
+        if (token === null) {
+          console.log('No session token provided.');
+          return null; // Return null to indicate cancellation
+        }
+      }
+      // Store the updated session token in localStorage
+      localStorage.setItem('sessionToken', token);
+      console.log('Session token updated:', token);
+      return token;
+    }
+  }
+
+  // If no existing token or user didn't want to update, request a new token
   let token = null;
   while (!token) {
     token = prompt('Please enter your session token:');
     if (token === null) {
       console.log('No session token provided.');
+      return null; // Return null to indicate cancellation
     }
   }
   // Store the session token in localStorage
   localStorage.setItem('sessionToken', token);
   console.log('Session token set:', token);
+  return token;
 }
 
 // Add click event handlers for the buttons
 document.getElementById("activateButton1").addEventListener("click", function() {
-  let sessionToken = localStorage.getItem("sessionToken");
-  if (!sessionToken) {
-    requestSessionToken();
+  let sessionToken = requestSessionToken();
+  if (sessionToken) {
+    runCommandLocally('l02023', '43');
   }
-  runCommandLocally('l02023', '43');
 });
 
 document.getElementById("activateButton2").addEventListener("click", function() {
-  let sessionToken = localStorage.getItem("sessionToken");
-  if (!sessionToken) {
-    requestSessionToken();
+  let sessionToken = requestSessionToken();
+  if (sessionToken) {
+    runCommandLocally('l02024', '43');
   }
-  runCommandLocally('l02024', '43');
 });
 
 document.getElementById("activateButton3").addEventListener("click", function() {
-  let sessionToken = localStorage.getItem("sessionToken");
-  if (!sessionToken) {
-    requestSessionToken();
+  let sessionToken = requestSessionToken();
+  if (sessionToken) {
+    runCommandLocally('l02025', '43');
   }
-  runCommandLocally('l02025', '43');
 });
 
 document.getElementById("activateButton4").addEventListener("click", function() {
-  let sessionToken = localStorage.getItem("sessionToken");
-  if (!sessionToken) {
-    requestSessionToken();
+  let sessionToken = requestSessionToken();
+  if (sessionToken) {
+    runCommandLocally('l02026', '43');
   }
-  runCommandLocally('l02026', '43');
 });
 
 
