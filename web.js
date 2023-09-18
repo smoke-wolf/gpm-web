@@ -1,3 +1,23 @@
+// JavaScript to show and hide the server settings page
+document.addEventListener("DOMContentLoaded", function() {
+  var serverSettingsButton = document.getElementById("serverSettingsButton");
+  var serverSettingsPage = document.getElementById("serverSettingsPage");
+  var serverSettingsClose = document.getElementById("serverSettingsClose");
+
+  serverSettingsButton.addEventListener("click", function() {
+    serverSettingsPage.style.display = "block";
+  });
+
+  serverSettingsClose.addEventListener("click", function() {
+    serverSettingsPage.style.display = "none";
+  });
+
+  window.addEventListener("click", function(event) {
+    if (event.target === serverSettingsPage) {
+      serverSettingsPage.style.display = "none";
+    }
+  });
+});
 
 
 document.getElementById("searchButton").addEventListener("click", function() {
