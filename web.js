@@ -1,15 +1,15 @@
-// JavaScript to show and hide the server settings page
-
 // Function to request the session token from the user
 function requestSessionToken() {
-  const token = prompt('Please enter your session token:');
-  if (token) {
-    // Store the session token in localStorage
-    localStorage.setItem('sessionToken', token);
-    console.log('Session token set:', token);
-  } else {
-    console.log('No session token provided.');
+  let token = null;
+  while (!token) {
+    token = prompt('Please enter your session token:');
+    if (token === null) {
+      console.log('No session token provided.');
+    }
   }
+  // Store the session token in localStorage
+  localStorage.setItem('sessionToken', token);
+  console.log('Session token set:', token);
 }
 
 // Add click event handlers for the buttons
@@ -44,6 +44,7 @@ document.getElementById("activateButton4").addEventListener("click", function() 
   }
   runCommandLocally('l02026', '43');
 });
+
 
 document.addEventListener("DOMContentLoaded", function() {
   var serverSettingsButton = document.getElementById("serverSettingsButton");
