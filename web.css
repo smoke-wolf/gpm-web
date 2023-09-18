@@ -48,14 +48,20 @@ header h1 {
   background-color: #E1E6E1;
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  
 }
 
 /* Search container styling */
 #searchContainer {
   display: flex;
   align-items: center;
+  border-width: 2px;
+  border-color: #471131;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 1px;
+  margin-left: 155px;
+  -color: #181147
+  
 }
 
 #searchInput {
@@ -99,11 +105,14 @@ header h1 {
   scrollbar-width: thin;
   text-align: left;
   margin-top: 20px;
+  
 }
 
 /* Repository item styling */
 .repository {
-  margin-bottom: 30px;
+  border-width: 2px;
+  margin-top: 5px;
+  border-color: #471131;
   padding: 10px;
   border-radius: 5px;
   background-color: #136f63;
@@ -112,8 +121,10 @@ header h1 {
 }
 
 .repository:hover {
-  background-color: #E49273;
+  background-color: #837dad;
   color: #000F08;
+  
+  
 }
 
 /* Link styling */
@@ -235,3 +246,78 @@ header h1 {
   right: 10px;
   cursor: pointer;
 }
+
+/* Apply some basic styles to the form */
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #E1E6E1;
+    color: #000F08;
+    transition: background-color 0.3s ease, border-color 0.3s ease; /* Added border-color transition */
+}
+
+h1 {
+    text-align: center;
+    font-size: 24px;
+}
+
+/* Style labels and inputs */
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: #136f63;
+}
+
+input[type="text"], select {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #136f63;
+    color: #E1E6E1;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+input[type="checkbox"] {
+    margin-right: 5px;
+}
+
+/* Style the submit button */
+input[type="submit"] {
+    background-color: #E49273;
+    color: #E1E6E1;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: #CBEFB6;
+    color: #000F08;
+}
+
+/* Style the PermaKey dropdown */
+#permkey-dropdown {
+    margin-top: 15px;
+}
+
+/* Add some spacing to the form */
+br {
+    clear: both;
+}
+
+/* Hover effect on the form */
+form:hover {
+    border-width: 2px;
+    border-color: #471131; /* Change border color on hover */
+}
+
+
