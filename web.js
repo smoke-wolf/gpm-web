@@ -16,26 +16,28 @@ function requestSessionToken() {
           return null; // Return null to indicate cancellation
         }
       }
-      // Store the updated session token in localStorage
-      localStorage.setItem('sessionToken', token);
-      console.log('Session token updated:', token);
-      return token;
+      // Update the existing session token
+      existingToken = token;
+      localStorage.setItem('sessionToken', existingToken);
+      console.log('Session token updated:', existingToken);
     }
+  } else {
+    // If no existing token or user didn't want to update, request a new token
+    let token = null;
+    while (!token) {
+      token = prompt('Please enter your session token:');
+      if (token === null) {
+        console.log('No session token provided.');
+        return null; // Return null to indicate cancellation
+      }
+    }
+    // Store the session token in localStorage
+    localStorage.setItem('sessionToken', token);
+    console.log('Session token set:', token);
+    existingToken = token;
   }
 
-  // If no existing token or user didn't want to update, request a new token
-  let token = null;
-  while (!token) {
-    token = prompt('Please enter your session token:');
-    if (token === null) {
-      console.log('No session token provided.');
-      return null; // Return null to indicate cancellation
-    }
-  }
-  // Store the session token in localStorage
-  localStorage.setItem('sessionToken', token);
-  console.log('Session token set:', token);
-  return token;
+  return existingToken;
 }
 
 // Add click event handlers for the buttons
@@ -66,6 +68,7 @@ document.getElementById("activateButton4").addEventListener("click", function() 
     runCommandLocally('l02026', '43');
   }
 });
+
 
 
 document.addEventListener("DOMContentLoaded", function() {
