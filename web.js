@@ -1,3 +1,12 @@
+// Function to clear local storage
+function clearLocalStorage() {
+  localStorage.clear();
+}
+
+// Add an event listener for the beforeunload event
+window.addEventListener("beforeunload", clearLocalStorage);
+
+
 // Function to request the session token from the user
 function requestSessionToken() {
   let existingToken = localStorage.getItem("sessionToken");
