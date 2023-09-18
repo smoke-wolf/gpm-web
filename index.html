@@ -10,6 +10,8 @@
   <header>
     <h1>GitHub Repository Search</h1>
     <div class="buttons">
+      <button id="serverSettingsButton">Server Settings</button>
+
   <button id="profileButton">Profile</button>
   <button id="activateButton1" onclick="runCommandLocally('l02023', '43');">Activate</button>
   <button id="activateButton2" onclick="runCommandLocally('l02024', '43');">Install</button>
@@ -29,6 +31,61 @@
       <ul id="repositoryList"></ul>
     </div>
   </div>
+
+  <!-- Server Settings Page -->
+<div id="serverSettingsPage" class="modal">
+  <div class="modal-content">
+    <span class="close" id="serverSettingsClose">&times;</span>
+    <!-- Include your server settings form here -->
+    
+    <body
+      
+    <form action="http://localhost:3000/update-settings" method="POST">
+        <label for="sessionkey">Session Key:</label>
+        <input type="text" id="sessionkey" name="sessionkey" value="{session_key}" required>
+        <br><br>
+
+        <label for="authkey">Auth Key:</label>
+        <input type="text" id="authkey" name="authkey" value="{auth_key}" required>
+        <br><br>
+
+        <label for="downloadauth">Download Auth:</label>
+        <input type="checkbox" id="downloadauth" name="downloadauth">
+        <br><br>
+
+        <label for="permkeys">PermaKeys:</label>
+        <input type="checkbox" id="permkeys" name="permkeys">
+        <br><br>
+
+        <!-- Dropdown for PermaKey request -->
+        <div id="permkey-dropdown" style="display: none;">
+            <label for="requestpermkey">Request PermaKey:</label>
+            <select id="requestpermkey" name="requestpermkey">
+                <option value="option1">Option 1</option>
+                <option value="option2">Option 2</option>
+                <option value="option3">Option 3</option>
+            </select>
+        </div>
+
+        <input type="submit" value="Update Settings">
+    </form>
+
+    <script>
+        // Show/hide the PermaKey dropdown based on checkbox state
+        const permKeysCheckbox = document.getElementById('permkeys');
+        const permKeyDropdown = document.getElementById('permkey-dropdown');
+
+        permKeysCheckbox.addEventListener('change', () => {
+            if (permKeysCheckbox.checked) {
+                permKeyDropdown.style.display = 'block';
+            } else {
+                permKeyDropdown.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+  </div>
+</div>
 
   <!-- Profile Page -->
   <div id="profilePage">
